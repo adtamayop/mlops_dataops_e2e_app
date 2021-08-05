@@ -1,0 +1,1 @@
+This repository contains an application that integrates mlops and dataops methodologies
