@@ -113,9 +113,6 @@ def _build_keras_model(feature_list: List[Text]) -> tf.keras.Model:
   model.summary(print_fn=logging.info)
   return model
 
-
-# TFX Trainer will call this function.
-# TODO(step 4): Construct, train and save your model in this function.
 def run_fn(fn_args: tfx.components.FnArgs):
   """Train the model based on given args.
 
