@@ -3,7 +3,10 @@ from models import features
 from typing import List, Optional, Text
 import tensorflow_model_analysis as tfma
 from ml_metadata.proto import metadata_store_pb2
+from tfx.proto import (example_gen_pb2, bulk_inferrer_pb2, pusher_pb2,
+                       trainer_pb2, transform_pb2)
 
+from pipeline.configs import TRAIN_NUM_STEPS, EVAL_NUM_STEPS, VAL_NUM_STEPS
 def create_pipeline(
     pipeline_name: Text,
     pipeline_root: Text,
@@ -21,7 +24,16 @@ def create_pipeline(
   """Implements the pipeline with TFX."""
 
   components = []
-  example_gen = tfx.components.CsvExampleGen(input_base=data_path)
+  
+  input = example_gen_pb2.Input(
+        splits=[
+            example_gen_pb2.Input.Split(name="train", pattern="train/*"),
+            example_gen_pb2.Input.Split(name="validation", pattern="val/*"),
+            example_gen_pb2.Input.Split(name="test", pattern="test/*"),
+        ]
+    )
+
+  example_gen = tfx.components.CsvExampleGen(input_base=data_path, input_config=input)
   components.append(example_gen)
 
   statistics_gen = tfx.components.StatisticsGen(
@@ -41,7 +53,10 @@ def create_pipeline(
   transform = tfx.components.Transform(  # pylint: disable=unused-variable
       examples=example_gen.outputs['examples'],
       schema=schema_gen.outputs['schema'],
-      preprocessing_fn=preprocessing_fn)
+      preprocessing_fn=preprocessing_fn, 
+      splits_config=transform_pb2.SplitsConfig(
+            analyze=["train"], transform=["train", "validation", "test"]
+        ))
   # TODO(step 3): Uncomment here to add Transform to the pipeline.
   components.append(transform)
 
@@ -51,8 +66,9 @@ def create_pipeline(
       examples=transform.outputs['transformed_examples'],
       transform_graph=transform.outputs['transform_graph'],
       schema=schema_gen.outputs['schema'],
-      train_args=train_args,
-      eval_args=eval_args)
+      train_args=trainer_pb2.TrainArgs(splits=["train"], num_steps=TRAIN_NUM_STEPS),
+      eval_args=trainer_pb2.EvalArgs(splits=["validation"], num_steps=VAL_NUM_STEPS),
+    )
   components.append(trainer)
 
   model_resolver = tfx.dsl.Resolver(
@@ -82,7 +98,8 @@ def create_pipeline(
       examples=example_gen.outputs['examples'],
       model=trainer.outputs['model'],
       baseline_model=model_resolver.outputs['model'],
-      eval_config=eval_config)
+      eval_config=eval_config,
+      example_splits=["test"])
   components.append(evaluator)
 
   pusher = tfx.components.Pusher(  # pylint: disable=unused-variable
@@ -97,7 +114,7 @@ def create_pipeline(
       pipeline_name=pipeline_name,
       pipeline_root=pipeline_root,
       components=components,
-      enable_cache=True,
+      enable_cache=False,
       metadata_connection_config=metadata_connection_config,
       beam_pipeline_args=beam_pipeline_args,
   )

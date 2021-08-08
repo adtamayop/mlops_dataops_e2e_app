@@ -58,6 +58,7 @@ RUN_FN = 'models.model.run_fn'
 
 TRAIN_NUM_STEPS = 100
 EVAL_NUM_STEPS = 15
+VAL_NUM_STEPS = 15
 
 # Change this value according to your use cases.
 EVAL_ACCURACY_THRESHOLD = 0.4

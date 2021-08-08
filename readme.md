@@ -13,7 +13,7 @@ TODO list:
 5. Add pytest coverage
 6. LOAD api_key of alphavetage from environment
 7. Guardar los datos con fechas de creación
-
+8. Add poetry 
 
 SABADO:
 1. Componente de Ingestión dentro de la arquitectura
@@ -25,4 +25,5 @@ TODO: Crear sh co
 
 1. Descargar los datos ejecutando python src/data/get_external_data.py
 2. Crear dataset ejecutando python src/data/merge_raw_data.py
-3.
+3. Labelling.py
+4. Preprocess and split preprocess.py

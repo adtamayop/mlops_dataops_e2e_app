@@ -48,7 +48,7 @@ SERVING_MODEL_DIR = os.path.join(PIPELINE_ROOT, 'serving_model')
 #       DATA_PATH = 'gs://bucket/penguin/csv/'.
 # TODO(step 4): Specify the path for your data.
 # DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-DATA_PATH = "data/test/"
+DATA_PATH = "data/processed/split/"
 
 
 def run():
@@ -75,5 +75,5 @@ def run():
 
 
 if __name__ == '__main__':
-  logging.set_verbosity(logging.INFO)
+  logging.set_verbosity(logging.DEBUG)
   run()
