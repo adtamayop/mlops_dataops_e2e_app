@@ -28,6 +28,7 @@ borrar todas las imagenes: docker system prune -a
 5. en la carpeta que quiero en google drive hay un id en la url
     `dvc remote add -d storage gdrive://URL_ID`
     `dvc remote add -d storage gdrive://1IAd7Gtf0YElFL3N5d76yxFt42kQwQXfc`
+    dvc remote add --default myremote gdrive://1IAd7Gtf0YElFL3N5d76yxFt42kQwQXfc
 6. `git commit ./dvc/config -m "Configure remote storage"`
 7. `dvc push` (puede que nos pida verificación)
 8. si elimino los archivos, con dvc pull los puedo traer
@@ -46,9 +47,24 @@ Obtener solo los archivos
 `dvc get link_repo`
 `dvc list --dvc-only link_repo`
 
+dvc remote modify myremote --local \
+dvc remote modify storage gdrive_user_credentials_file
+      gdrive_user_credentials_file
 
 
-
+dvc remote modify storage gdrive_user_credentials_file build/gdrive-user-credentials.json
 
 pre-commit run --all-files
 pytest
+
+
+dvc remote add --default myremote \
+                           gdrive://0AIac4JZqHhKmUk9PDA/dvcstore
+
+
+                           dvc remote add -d storage gdrive://1IAd7Gtf0YElFL3N5d76yxFt42kQwQXfc
+
+
+dvc remote modify storage --local gdrive_user_credentials_file build/gdrive-user-credentials.json
+
+dvc remote modify myremote --local gdrive_service_account_json_file_path build/gdrive-user-credentials.json

@@ -1,5 +1,5 @@
 [core]
-    remote = storage
-['remote "storage"']
+    remote = myremote
+['remote "myremote"']
     url = gdrive://1IAd7Gtf0YElFL3N5d76yxFt42kQwQXfc
-    gdrive_user_credentials_file = ../build/gdrive-user-credentials.json
+    gdrive_use_service_account = true
