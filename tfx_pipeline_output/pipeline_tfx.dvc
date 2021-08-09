@@ -1,0 +1,5 @@
+outs:
+- md5: f474f837dc3156b858de0e9b024da000.dir
+  size: 9071607
+  nfiles: 144
+  path: pipeline_tfx
