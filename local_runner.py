@@ -32,7 +32,7 @@ OUTPUT_DIR = '.'
 # - Metadata will be written to SQLite database in METADATA_PATH.
 PIPELINE_ROOT = os.path.join(OUTPUT_DIR, 'tfx_pipeline_output',
                              configs.PIPELINE_NAME)
-METADATA_PATH = os.path.join(OUTPUT_DIR, 'tfx_metadata', configs.PIPELINE_NAME,
+METADATA_PATH = os.path.join(OUTPUT_DIR,'tfx_pipeline_output', 'metadata',
                              'metadata.db')
 
 # The last component of the pipeline, "Pusher" will produce serving model under

@@ -26,8 +26,6 @@ __pycache__/
 
 nohup.out
 htmlcov/
-tfx_metadata/*
-tfx_pipeline_output/*
 .pytest_cache/
 *.DS_Store
-/tfx_pipeline_output
+

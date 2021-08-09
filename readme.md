@@ -47,3 +47,18 @@ CLOUD CONFIGURATION
 4. Crear pipeline de kubeflow: kubeflow-mlops-dataops-pipeline
 5. 
 
+
+
+
+
+tfx==1.0.0
+# tensorflow==2.5.0
+dvc
+dvc[gdrive]
+great_expectations
+pre-commit
+munch
+pytest
+pytest-cov
+python-dotenv
+requests

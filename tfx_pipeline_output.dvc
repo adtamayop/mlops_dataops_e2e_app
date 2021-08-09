@@ -1,5 +1,0 @@
-outs:
-- md5: 8913a0432d8857c74fd28ba53c295e77.dir
-  size: 9239543
-  nfiles: 145
-  path: tfx_pipeline_output
