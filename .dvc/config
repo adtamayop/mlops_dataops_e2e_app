@@ -2,4 +2,4 @@
     remote = storage
 ['remote "storage"']
     url = gdrive://1IAd7Gtf0YElFL3N5d76yxFt42kQwQXfc
-    gdrive_user_credentials_file = ../mlops-dataops-project-627f912624f8.json
+    gdrive_user_credentials_file = ../build/gdrive-user-credentials.json

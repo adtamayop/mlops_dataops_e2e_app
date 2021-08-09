@@ -7,7 +7,7 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
         exclude: build/gdrive-user-credentials.json
-      - id: check-yaml
+      # - id: check-yaml
       - id:
           check-added-large-files
           # -   id: pretty-format-json

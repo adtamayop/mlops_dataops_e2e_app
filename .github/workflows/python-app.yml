@@ -35,7 +35,8 @@ jobs:
           dvc remote modify storage gdrive_user_credentials_file ./build/gdrive-user-credentials.json
           dvc pull
           rm -r tests/coverage_report/*
-          pytest -k-PipelineEndToEndTest --cov tests --cov src --cov pipeline_local.py --cov pipeline_airflow.py --cov-report html:tests/coverage_report/
+        #   pytest -k-PipelineEndToEndTest --cov tests --cov src --cov pipeline_local.py --cov pipeline_airflow.py --cov-report html:tests/coverage_report/
+          pytest
         # pytest tests/test_code/
         # pytest tests/test_data/
       - name: Check out the repo
