@@ -1,12 +1,15 @@
-from tfx import v1 as tfx
-from models import features
 from typing import List, Optional, Text
+
 import tensorflow_model_analysis as tfma
 from ml_metadata.proto import metadata_store_pb2
-from tfx.proto import (example_gen_pb2, bulk_inferrer_pb2, pusher_pb2,
+from tfx import v1 as tfx
+from tfx.proto import (bulk_inferrer_pb2, example_gen_pb2, pusher_pb2,
                        trainer_pb2, transform_pb2)
 
-from pipeline.configs import TRAIN_NUM_STEPS, EVAL_NUM_STEPS, VAL_NUM_STEPS
+from models import features
+from pipeline.configs import EVAL_NUM_STEPS, TRAIN_NUM_STEPS, VAL_NUM_STEPS
+
+
 def create_pipeline(
     pipeline_name: Text,
     pipeline_root: Text,
@@ -24,7 +27,7 @@ def create_pipeline(
   """Implements the pipeline with TFX."""
 
   components = []
-  
+
   input = example_gen_pb2.Input(
         splits=[
             example_gen_pb2.Input.Split(name="train", pattern="train/*"),
@@ -53,7 +56,7 @@ def create_pipeline(
   transform = tfx.components.Transform(  # pylint: disable=unused-variable
       examples=example_gen.outputs['examples'],
       schema=schema_gen.outputs['schema'],
-      preprocessing_fn=preprocessing_fn, 
+      preprocessing_fn=preprocessing_fn,
       splits_config=transform_pb2.SplitsConfig(
             analyze=["train"], transform=["train", "validation", "test"]
         ))

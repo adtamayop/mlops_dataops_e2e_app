@@ -14,11 +14,11 @@
 """Define LocalDagRunner to run the pipeline locally."""
 
 import os
-from absl import logging
 
+from absl import logging
 from tfx import v1 as tfx
-from pipeline import configs
-from pipeline import pipeline
+
+from pipeline import configs, pipeline
 
 # TFX pipeline produces many output files and metadata. All output data will be
 # stored under this OUTPUT_DIR.

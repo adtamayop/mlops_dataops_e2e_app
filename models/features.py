@@ -1,7 +1,8 @@
 import os
 import sys
-import pandas as pd
 from typing import Text
+
+import pandas as pd
 
 # TODO: code smell of project estructure
 currentdir = os.path.dirname(os.path.realpath(__file__))
@@ -9,7 +10,7 @@ parentdir = os.path.dirname(currentdir)
 # parentdir = os.path.dirname(parentdir)
 sys.path.append(parentdir)
 
-from src.config.config import Paths, Features
+from src.config.config import Features, Paths
 
 LABEL_KEY = "label"
 df_train = pd.read_csv(f"{Paths.SPLITTED_DATA_PATH}train/train.csv")

@@ -1,0 +1,62 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+        exclude: build/gdrive-user-credentials.json
+      - id: check-yaml
+      - id:
+          check-added-large-files
+          # -   id: pretty-format-json
+      - id: requirements-txt-fixer
+  - repo: https://github.com/pycqa/isort
+    rev: 5.8.0
+    hooks:
+      - id: isort
+        name: isort (python)
+      - id: isort
+        name: isort (cython)
+        types: [cython]
+      - id: isort
+        name: isort (pyi)
+        types: [pyi]
+  # - repo: https://github.com/pycqa/flake8
+  #   rev: "" # pick a git hash / tag to point to
+  #   hooks:
+  #     - id: flake8
+  # - repo: https://github.com/psf/black
+  #   rev: 20.8b1
+  #   hooks:
+  #     - id: black
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.3.9
+    hooks:
+      - id: nbstripout
+        files: .ipynb
+  - repo: https://github.com/iterative/dvc
+    rev: master
+    hooks:
+      - id: dvc-pre-commit
+        language_version: python3
+        stages:
+          - commit
+      # - id: dvc-pre-push
+      #   language_version: python3
+      #   stages:
+      #   - push
+      - id: dvc-post-checkout
+        language_version: python3
+        stages:
+          - post-checkout
+        always_run: true
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: pytest-check
+        entry: pytest
+        language: system
+        pass_filenames: false
+        always_run: true

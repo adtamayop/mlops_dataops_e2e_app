@@ -18,18 +18,17 @@ parameters defined in constants.py.
 """
 
 from typing import List, Text
-from absl import logging
-import tensorflow as tf
-from tensorflow import keras
-import tensorflow_transform as tft
-from tensorflow_transform.tf_metadata import schema_utils
 
+import tensorflow as tf
+import tensorflow_transform as tft
+from absl import logging
+from tensorflow import keras
+from tensorflow_metadata.proto.v0 import schema_pb2
+from tensorflow_transform.tf_metadata import schema_utils
 from tfx import v1 as tfx
-from models import constants
-from models import features
 from tfx_bsl.public import tfxio
 
-from tensorflow_metadata.proto.v0 import schema_pb2
+from models import constants, features
 
 
 def _get_serve_tf_examples_fn(model, schema, tf_transform_output):

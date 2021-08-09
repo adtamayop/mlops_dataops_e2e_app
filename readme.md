@@ -13,14 +13,14 @@ TODO list:
 5. Add pytest coverage
 6. LOAD api_key of alphavetage from environment
 7. Guardar los datos con fechas de creación
-8. Add poetry 
+8. Add poetry
 9. Pendientes todas las formas de labelling
 
 
 SABADO:
 
 
-TODO: Crear sh co 
+TODO: Crear sh co
 
 1. Descargar los datos ejecutando python src/data/get_external_data.py
 2. Crear dataset ejecutando python src/data/merge_raw_data.py
@@ -45,7 +45,7 @@ CLOUD CONFIGURATION
 2. Crear bucket: mlops-dataops-bucket
 3. Crear notebooks: mlops-dataops-notebook
 4. Crear pipeline de kubeflow: kubeflow-mlops-dataops-pipeline
-5. 
+5.
 
 
 

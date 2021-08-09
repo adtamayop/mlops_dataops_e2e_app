@@ -14,6 +14,7 @@
 # limitations under the License.
 import os
 import sys
+
 import tensorflow as tf
 
 # TODO: code smell of project estructure
@@ -23,6 +24,7 @@ parentdir = os.path.dirname(parentdir)
 sys.path.append(parentdir)
 
 from models import features
+
 
 class FeaturesTest(tf.test.TestCase):
 

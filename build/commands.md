@@ -1,4 +1,4 @@
-## DOCKER 
+## DOCKER
 
 docker build --tag mlops_dataops_image build/
 
@@ -27,26 +27,28 @@ borrar todas las imagenes: docker system prune -a
 4.  `git commit -m "....."`
 5. en la carpeta que quiero en google drive hay un id en la url
     `dvc remote add -d storage gdrive://URL_ID`
-    `dvc remote add -d storage gdrive://1rM2rqzgXT9GctL5aUIbWkwN3FpgX2lG7`
+    `dvc remote add -d storage gdrive://1IAd7Gtf0YElFL3N5d76yxFt42kQwQXfc`
 6. `git commit ./dvc/config -m "Configure remote storage"`
 7. `dvc push` (puede que nos pida verificación)
 8. si elimino los archivos, con dvc pull los puedo traer
 
 `dvc destroy`
 
----
-
 Movernos entre versiones de datasets en el tiempo:
 
-1. para ver los commits y tener el id o  podemos por ejm ir al último cambio de un archivo especfico así: 
+1. para ver los commits y tener el id o  podemos por ejm ir al último cambio de un archivo especfico así:
     `git log --oneline`
 2. `git checkout HEAD^1 data/data.csv.dvc`
 3. `dvc checkout`
-
 y ahí ya me devuelvo de versión
-
----
 
 Obtener solo los archivos
 `dvc get link_repo`
 `dvc list --dvc-only link_repo`
+
+
+
+
+
+pre-commit run --all-files
+pytest

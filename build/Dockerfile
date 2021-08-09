@@ -6,6 +6,6 @@ COPY . /app
 
 RUN python3 -m pip install --upgrade pip
 
-RUN pip install -r app/requirements_local_run.txt
+RUN pip install -r app/requirements.txt
 
 CMD ["bash"]

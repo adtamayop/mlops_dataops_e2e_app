@@ -1,13 +1,15 @@
+import glob
+import itertools
+import json
 import os
 import sys
 import time
-import json
-import glob
-import itertools
-from tqdm import tqdm
+
 import numpy as np
 import pandas as pd
 import requests
+from tqdm import tqdm
+
 # from dotenv import load_dotenv
 
 # TODO: Modify project structure for don't do this smell code
@@ -18,9 +20,10 @@ sys.path.append(parentdir)
 from config.config import DownloadDataParams as params
 from config.config import Paths
 
+
 def get_months_and_years_to_query(months, years):
     """
-    
+
     """
     months = [month for month in range(1, (months + 1))]
     years = [year for year in range(1, (years + 1))]
@@ -30,7 +33,7 @@ def get_months_and_years_to_query(months, years):
 
 def delete_existing_data(path_data, window_date):
     """
-    
+
     """
     files = glob.glob(f"{path_data}{window_date}")
     for f in files:
@@ -41,7 +44,7 @@ def delete_existing_data(path_data, window_date):
 
 def download_raw_data(parameters, api_key, dates_sorted):
     """
-    
+
     """
     for month, year in dates_sorted:
         window_date = f"year{year}month{month}"
@@ -67,7 +70,7 @@ def download_raw_data(parameters, api_key, dates_sorted):
 
 def request_symbols(token):
     """
-    
+
     """
     q_string = "https://www.alphavantage.co/query?function=LISTING_STATUS&apikey={}"
     print("Retrieving stock symbols from Alpha Vantage...")
@@ -90,7 +93,7 @@ if __name__ == "__main__":
     # api_key = os.getenv("ALPHAVANTAGE_API_KEY")
     api_key = params.ALPHAVANTAGE_API_KEY
     dates_sorted = get_months_and_years_to_query(
-        params.MONTHS_TO_DOWNLOAD, 
+        params.MONTHS_TO_DOWNLOAD,
         params.YEARS_TO_DOWNLOAD)
 
     if params.DONWLOAD_NEW_DATA:

@@ -1,5 +1,6 @@
 import os
 import sys
+
 import pandas as pd
 
 # TODO: Modify project structure for don't do this smell code
@@ -7,8 +8,8 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
-from config.config import Paths
 from config.config import DownloadDataParams as params
+from config.config import Paths
 from data.get_external_data import get_months_and_years_to_query
 
 
@@ -52,7 +53,7 @@ def write_dataset(dataset):
 if __name__ == "__main__":
     if params.JOIN_SEPARATED_DATA:
         dates_sorted = get_months_and_years_to_query(
-            params.MONTHS_TO_DOWNLOAD, 
+            params.MONTHS_TO_DOWNLOAD,
             params.YEARS_TO_DOWNLOAD)
 
         data = join_data(dates_sorted)

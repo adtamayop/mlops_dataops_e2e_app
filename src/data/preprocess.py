@@ -1,15 +1,14 @@
+import itertools
 import os
 import sys
 import time
-import requests
-import itertools
-import numpy as np
-import pandas as pd 
-from tqdm import tqdm
+from math import exp, log
 
-from math import log, exp
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import StandardScaler
+import numpy as np
+import pandas as pd
+import requests
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from tqdm import tqdm
 
 # TODO: Modify project structure for don't do this smell code
 currentdir = os.path.dirname(os.path.realpath(__file__))
@@ -17,6 +16,7 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
 from config.config import Paths
+
 
 def split_train_test(dataset, perc_train = 0.8, perc_val = 0.1):
     """
@@ -63,4 +63,3 @@ if __name__ == "__main__":
     train_df.to_csv(f"{Paths.SPLITTED_DATA_PATH}/train/train.csv", index=False)
     val_df.to_csv(f"{Paths.SPLITTED_DATA_PATH}/val/val.csv", index=False)
     test_df.to_csv(f"{Paths.SPLITTED_DATA_PATH}/test/test.csv", index=False)
-    

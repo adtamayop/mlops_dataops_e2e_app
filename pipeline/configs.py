@@ -21,7 +21,7 @@ except ImportError:
 
 GCS_BUCKET_NAME = 'main-cyclist-321921-kubeflowpipelines-default'
 
-  
+
 PIPELINE_IMAGE = f'gcr.io/{GOOGLE_CLOUD_PROJECT}/{PIPELINE_NAME}'
 
 BIG_QUERY_WITH_DIRECT_RUNNER_BEAM_PIPELINE_ARGS = [
@@ -43,4 +43,3 @@ VAL_NUM_STEPS = 15
 
 # Change this value according to your use cases.
 EVAL_ACCURACY_THRESHOLD = 0.4
-

@@ -1,11 +1,11 @@
-tfx==1.0.0
 # tensorflow==2.5.0
 dvc
 dvc[gdrive]
 great_expectations
-pre-commit
 munch
+pre-commit
 pytest
 pytest-cov
 python-dotenv
 requests
+tfx==1.0.0

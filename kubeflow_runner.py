@@ -14,13 +14,12 @@
 """Define KubeflowDagRunner to run the pipeline using Kubeflow."""
 
 import os
+
 from absl import logging
-
 from tfx import v1 as tfx
-from pipeline import configs
-from pipeline import pipeline
-
 from tfx.orchestration.kubeflow import kubeflow_dag_runner
+
+from pipeline import configs, pipeline
 
 # TFX pipeline produces many output files and metadata. All output data will be
 # stored under this OUTPUT_DIR.kubeflow_dag_runner

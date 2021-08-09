@@ -1,5 +1,6 @@
 import os
 import sys
+
 import numpy as np
 import pandas as pd
 
@@ -8,7 +9,8 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
-from config.config import LabellingParams, Paths, Features
+from config.config import Features, LabellingParams, Paths
+
 
 def label_row(row):
     if row[f"{Features.RAW_INPUT_LABEL}_avg_change_pct"] > LabellingParams.STATIONARY_THRESHOLD:
@@ -30,7 +32,7 @@ def labelling_time_series(data, features, label):
 
 def supervised_data(dataset_labelled):
     """
-    
+
     """
     data = []
     labels = []
@@ -43,14 +45,14 @@ def supervised_data(dataset_labelled):
 def save_data_as_csv(dataset, labels):
 
     dataset_flattened = pd.DataFrame(
-        dataset.reshape(dataset.shape[0], 
-        dataset.shape[1]*dataset.shape[2]), 
+        dataset.reshape(dataset.shape[0],
+        dataset.shape[1]*dataset.shape[2]),
         columns= [f"col_t_{i}" for i in range(dataset.shape[1]*dataset.shape[2])])
 
     labels = pd.DataFrame(columns=[f"{Features.LABEL_KEY}"], data=labels)
     dataset = pd.concat([dataset_flattened, labels], axis=1)
     dataset.to_csv(
-        index=False, 
+        index=False,
         path_or_buf=f"{Paths.PATH_LABELLED_DATA}{Paths.LABELLED_DATA_NAME}")
 
 if __name__ == "__main__":

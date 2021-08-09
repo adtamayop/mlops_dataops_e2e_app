@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 class DownloadDataParams:
     # CONSTANTS OF DATA DOWNLOAD
     MONTHS_TO_DOWNLOAD = 12
