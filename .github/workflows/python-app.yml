@@ -28,16 +28,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install --upgrade pip==20.3
           pip install --use-deprecated=legacy-resolver -r ./build/requirements.txt
-      - name: Test with pytest
-        run: |
-          echo $(pwd)
-          echo $(ls -h)
-        # dvc remote modify storage gdrive_user_credentials_file ./build/gdrive-user-credentials.json
-        # dvc pull
-          rm -r tests/coverage_report/*
-        # pytest
-        #   pytest -k-PipelineEndToEndTest --cov tests --cov src --cov pipeline_local.py --cov pipeline_airflow.py --cov-report html:tests/coverage_report/
-        # pytest tests/test_data/
+      # - name: Test with pytest
+      #   run: |
+      #     echo $(pwd)
+      #     echo $(ls -h)
+      #   # dvc remote modify storage gdrive_user_credentials_file ./build/gdrive-user-credentials.json
+      #   # dvc pull
+      #     rm -r tests/coverage_report/*
+      #   # pytest
+      #   #   pytest -k-PipelineEndToEndTest --cov tests --cov src --cov pipeline_local.py --cov pipeline_airflow.py --cov-report html:tests/coverage_report/
+      #   # pytest tests/test_data/
       - name: Check out the repo
         uses: actions/checkout@v2
         with:
