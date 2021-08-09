@@ -30,3 +30,4 @@ tfx_metadata/*
 tfx_pipeline_output/*
 .pytest_cache/
 *.DS_Store
+/data
