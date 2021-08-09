@@ -29,4 +29,4 @@ htmlcov/
 tfx_metadata/*
 tfx_pipeline_output/*
 .pytest_cache/
-*/__pycache__/*
+*.DS_Store

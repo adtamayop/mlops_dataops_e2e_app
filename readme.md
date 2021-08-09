@@ -14,11 +14,10 @@ TODO list:
 6. LOAD api_key of alphavetage from environment
 7. Guardar los datos con fechas de creación
 8. Add poetry 
+9. Pendientes todas las formas de labelling
+
 
 SABADO:
-1. Componente de Ingestión dentro de la arquitectura
-2. Pasar el json de los datos a python contants
-
 
 
 TODO: Crear sh co 
@@ -27,3 +26,24 @@ TODO: Crear sh co
 2. Crear dataset ejecutando python src/data/merge_raw_data.py
 3. Labelling.py
 4. Preprocess and split preprocess.py
+
+
+
+
+
+
+
+
+
+
+
+
+
+CLOUD CONFIGURATION
+
+1. Crear proyecto: mlops-dataops-project   id: 	mlops-dataops-project
+2. Crear bucket: mlops-dataops-bucket
+3. Crear notebooks: mlops-dataops-notebook
+4. Crear pipeline de kubeflow: kubeflow-mlops-dataops-pipeline
+5. 
+

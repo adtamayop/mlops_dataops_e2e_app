@@ -58,8 +58,7 @@ def run():
   # lightweight deployment option, you may need to override the defaults.
   # If you use Kubeflow, metadata will be written to MySQL database inside
   # Kubeflow cluster.
-  metadata_config = kubeflow_dag_runner.get_default_kubeflow_metadata_config(
-  )
+  metadata_config = kubeflow_dag_runner.get_default_kubeflow_metadata_config()
 
   runner_config = kubeflow_dag_runner.KubeflowDagRunnerConfig(
       kubeflow_metadata_config=metadata_config,

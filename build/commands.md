@@ -1,3 +1,4 @@
+## DOCKER 
 
 docker build --tag tfx_nuevo .
 
