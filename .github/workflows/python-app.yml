@@ -60,5 +60,5 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           dockerfile: ./Dockerfile
           registry: docker.pkg.github.com
-          repository: adtamayop/mlops_dataops_e2e_app/
+          repository: adtamayop/mlops_dataops_e2e_app/build
           tag_with_ref: true
