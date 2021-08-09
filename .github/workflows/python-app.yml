@@ -32,7 +32,7 @@ jobs:
         run: |
           echo $(pwd)
           echo $(ls -h)
-          dvc remote modify storage gdrive_user_credentials_file ./build/gdrive-user-credentials.json
+          # dvc remote modify storage gdrive_user_credentials_file ./build/gdrive-user-credentials.json
           dvc pull
           rm -r tests/coverage_report/*
           pytest
