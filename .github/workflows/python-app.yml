@@ -60,5 +60,5 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           dockerfile: ./Dockerfile
           registry: docker.pkg.github.com
-          repository: adtamayop/trading_tfx/tfx_pipeline
+          repository: adtamayop/mlops_dataops_e2e_app/
           tag_with_ref: true
