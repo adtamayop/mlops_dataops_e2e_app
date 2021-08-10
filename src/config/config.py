@@ -32,7 +32,7 @@ class Features:
     RAW_INPUT_FEATURES = ["open", "high", "low", "close", "volume"]
     RAW_INPUT_LABEL = "close"
     LABEL_KEY = "label"
-    df_train = pd.read_csv(f"{Paths.SPLITTED_DATA_PATH}train/train.csv")
+    df_train = pd.read_csv(f"{Paths.DATA_TEST_PATH_FILE}")
     FEATURE_KEYS = list(df_train.columns.values)
     FEATURE_KEYS.remove(LABEL_KEY)
 
