@@ -25,6 +25,8 @@ class Paths:
     PATH_LABELLED_DATA = f"{DATA_PATH}processed/labeled/"
     LABELLED_DATA_NAME = "labelled_dataset.csv"
     SPLITTED_DATA_PATH = f"{DATA_PATH}processed/split/"
+    DATA_TEST_PATH = f"{DATA_PATH}test_dataset/"
+    DATA_TEST_PATH_FILE = f"{DATA_TEST_PATH}/train/train.csv"
 
 class Features:
     RAW_INPUT_FEATURES = ["open", "high", "low", "close", "volume"]
