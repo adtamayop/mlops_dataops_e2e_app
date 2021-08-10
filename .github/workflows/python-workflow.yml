@@ -33,6 +33,6 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Download data files
       run: |
-        # dvc remote modify storage gdrive_user_credentials_file ./build/gdrive-user-credentials.json
+        dvc remote modify storage gdrive_user_credentials_file ./build/gdrive-user-credentials.json
         dvc pull
         echo $(ls -h)
