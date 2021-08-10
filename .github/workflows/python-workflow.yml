@@ -21,7 +21,7 @@ jobs:
         # This path is specific to Ubuntu
         path: ~/.cache/pip
         # Look to see if there is a cache hit for the corresponding requirements file
-        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('build/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
           ${{ runner.os }}-
@@ -52,30 +52,6 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
         prerelease: false
-    # - name: Push to GitHub Packages
-    #   uses: docker/build-push-action@v1
-    #   with:
-    #     username: ${{ github.actor }}
-    #     password: ${{ secrets.GITHUB_TOKEN }}
-    #     dockerfile: ./Dockerfile
-    #     registry: docker.pkg.github.com
-    #     repository: adtamayop/mlops_dataops_e2e_app/
-    #     tag_with_ref: true
-
-  # Build-and-Push-Docker-Image:
-  #   runs-on: ubuntu-latest
-  #   name: Docker Build, Tag, Push
-  #   needs: build
-  #   steps:
-  #   - name: Build container image
-  #     uses: docker/build-push-action@v1
-  #     with:
-  #       username: ${{github.actor}}
-  #       password: ${{secrets.GITHUB_TOKEN}}
-  #       dockerfile: build/Dockerfile
-  #       registry: docker.pkg.github.com
-  #       repository: adtamayop/mlops_dataops_e2e_app/mlops_dataops_app
-  #       tag_with_sha: true
 
   build-and-push-image:
       runs-on: ubuntu-latest
