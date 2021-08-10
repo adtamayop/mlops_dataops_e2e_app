@@ -27,8 +27,8 @@ borrar todas las imagenes: docker system prune -a
 4.  `git commit -m "....."`
 5. en la carpeta que quiero en google drive hay un id en la url
     `dvc remote add -d storage gdrive://URL_ID`
-    `dvc remote add -d storage gdrive://1IAd7Gtf0YElFL3N5d76yxFt42kQwQXfc`
-    dvc remote add --default myremote gdrive://1IAd7Gtf0YElFL3N5d76yxFt42kQwQXfc
+    `dvc remote add -d storage gdrive://1_7fpAQRcq00YGoXhnDniZR809JS-1BHx`
+    dvc remote add --default myremote gdrive://1_7fpAQRcq00YGoXhnDniZR809JS-1BHx
 6. `git commit ./dvc/config -m "Configure remote storage"`
 7. `dvc push` (puede que nos pida verificación)
 8. si elimino los archivos, con dvc pull los puedo traer
