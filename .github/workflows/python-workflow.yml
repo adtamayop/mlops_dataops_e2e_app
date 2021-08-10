@@ -58,3 +58,24 @@ jobs:
     #     registry: docker.pkg.github.com
     #     repository: adtamayop/mlops_dataops_e2e_app/
     #     tag_with_ref: true
+
+  Build-and-Push-Docker-Image:
+    runs-on: ubuntu-latest
+    name: Docker Build, Tag, Push
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Download built artifact
+      uses: actions/download-artifact@main
+      with:
+        name: webpack artifacts
+        path: public
+    - name: Build container image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+        registry: docker.pkg.github.com
+        repository: adtamayop/mlops_dataops_e2e_app/mlops_dataops_app
+        tag_with_sha: true
