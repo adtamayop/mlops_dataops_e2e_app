@@ -69,6 +69,7 @@ jobs:
       with:
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
+        dockerfile: build/Dockerfile
         registry: docker.pkg.github.com
         repository: adtamayop/mlops_dataops_e2e_app/mlops_dataops_app
         tag_with_sha: true
