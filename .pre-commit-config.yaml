@@ -8,8 +8,8 @@ repos:
       - id: end-of-file-fixer
         exclude: build/gdrive-user-credentials.json
       # - id: check-yaml
-      - id:
-          check-added-large-files
+      # - id:
+          # check-added-large-files
           # -   id: pretty-format-json
       - id: requirements-txt-fixer
   - repo: https://github.com/pycqa/isort

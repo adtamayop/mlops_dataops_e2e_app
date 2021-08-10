@@ -6,7 +6,7 @@ env/
 
 .env
 
-*.csv
+# *.csv
 *.gz
 *.sqlite
 *.db
