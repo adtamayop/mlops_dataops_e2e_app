@@ -16,6 +16,8 @@ TODO list:
 8. Add poetry
 9. Pendientes todas las formas de labelling
 
+10. Componente para la bajar los datos de predicción en producción
+11. Pendientes test de integración de todo el pipeline
 
 SABADO:
 
@@ -62,3 +64,6 @@ pytest
 pytest-cov
 python-dotenv
 requests
+
+
+# chmod +x ./updatescript

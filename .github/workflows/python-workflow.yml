@@ -1,5 +1,4 @@
 name: Python application
-
 on:
   push:
     branches: [ main ]
@@ -55,3 +54,26 @@ jobs:
             push: true
             tags: |
               docker.pkg.github.com/${{ github.repository }}/latest:${{ github.sha }}
+
+
+# steps:
+# - uses: actions/checkout@v2
+# - name: Setup Python
+#   uses: actions/setup-python@v2
+#   with:
+#     python-version: '3.x'
+# - name: Cache pip
+#   uses: actions/cache@v2
+#   with:
+#     # This path is specific to Ubuntu
+#     path: ~/.cache/pip
+#     # Look to see if there is a cache hit for the corresponding requirements file
+#     key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+#     restore-keys: |
+#       ${{ runner.os }}-pip-
+#       ${{ runner.os }}-
+# - name: Install dependencies
+#   run: pip install -r requirements.txt
+# https://docs.github.com/es/actions/guides/building-and-testing-python#installing-dependencies
+# https://docs.github.com/en/enterprise-server@2.22/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions#publishing-a-package-using-an-action
+# https://github.com/docker/build-push-action

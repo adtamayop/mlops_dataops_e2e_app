@@ -30,6 +30,7 @@ class Paths:
 
 class Features:
     RAW_INPUT_FEATURES = ["open", "high", "low", "close", "volume"]
+    RAW_FEATURES = ["time", "open", "high", "low", "close", "volume"]
     RAW_INPUT_LABEL = "close"
     LABEL_KEY = "label"
     df_train = pd.read_csv(f"{Paths.DATA_TEST_PATH_FILE}")

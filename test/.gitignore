@@ -1,0 +1,7 @@
+# /test_pipeline/test_components/
+/test_pipeline/testPipeline/pipelines/*
+/test_pipeline/testPipeline/metadata/*
+!/test_pipeline/testPipeline/metadata/.gitkeep
+!/test_pipeline/testPipeline/pipelines/.gitkeep
+/coverage_report/*
+!/coverage_report/index.html
