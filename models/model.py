@@ -13,10 +13,12 @@
 # limitations under the License.
 """TFX template penguin model.
 
-A DNN keras model which uses features defined in features.py and network
-parameters defined in constants.py.
+A DNN keras model which uses features defined in Features.py and network
+parameters defined in ModelConstants.py.
 """
 
+import os
+import sys
 from typing import List, Text
 
 import tensorflow as tf
@@ -28,7 +30,15 @@ from tensorflow_transform.tf_metadata import schema_utils
 from tfx import v1 as tfx
 from tfx_bsl.public import tfxio
 
-from models import constants, features
+# TODO: Modify project structure for don't do this smell code
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+
+from models.preprocessing import transformed_name
+from src.config.config import Features, ModelConstants
+
+# from models import constants, features
 
 
 def _get_serve_tf_examples_fn(model, schema, tf_transform_output):
@@ -38,7 +48,7 @@ def _get_serve_tf_examples_fn(model, schema, tf_transform_output):
     def serve_tf_examples_fn(serialized_tf_examples):
       """Returns the output to be used in the serving signature."""
       feature_spec = schema_utils.schema_as_feature_spec(schema).feature_spec
-      feature_spec.pop(features.LABEL_KEY)
+      feature_spec.pop(Features.LABEL_KEY)
       parsed_features = tf.io.parse_example(serialized_tf_examples,
                                             feature_spec)
       return model(parsed_features)
@@ -50,7 +60,7 @@ def _get_serve_tf_examples_fn(model, schema, tf_transform_output):
     def serve_tf_examples_fn(serialized_tf_examples):
       """Returns the output to be used in the serving signature."""
       feature_spec = tf_transform_output.raw_feature_spec()
-      feature_spec.pop(features.LABEL_KEY)
+      feature_spec.pop(Features.LABEL_KEY)
       parsed_features = tf.io.parse_example(serialized_tf_examples,
                                             feature_spec)
       transformed_features = model.tft_layer(parsed_features)
@@ -97,15 +107,15 @@ def _build_keras_model(feature_list: List[Text]) -> tf.keras.Model:
   # https://www.tensorflow.org/guide/keras/overview for all API options.
   inputs = [keras.layers.Input(shape=(1,), name=f) for f in feature_list]
   d = keras.layers.concatenate(inputs)
-  for _ in range(constants.NUM_LAYERS):
-    d = keras.layers.Dense(constants.HIDDEN_LAYER_UNITS, activation='relu')(d)
+  for _ in range(ModelConstants.NUM_LAYERS):
+    d = keras.layers.Dense(ModelConstants.HIDDEN_LAYER_UNITS, activation='relu')(d)
   outputs = keras.layers.Dense(
-      constants.OUTPUT_LAYER_UNITS, activation='softmax')(
+      ModelConstants.OUTPUT_LAYER_UNITS, activation='softmax')(
           d)
 
   model = keras.Model(inputs=inputs, outputs=outputs)
   model.compile(
-      optimizer=keras.optimizers.Adam(constants.LEARNING_RATE),
+      optimizer=keras.optimizers.Adam(ModelConstants.LEARNING_RATE),
       loss='sparse_categorical_crossentropy',
       metrics=[keras.metrics.SparseCategoricalAccuracy()])
 
@@ -122,19 +132,19 @@ def run_fn(fn_args: tfx.components.FnArgs):
     tf_transform_output = None
     schema = tfx.utils.parse_pbtxt_file(fn_args.schema_file,
                                         schema_pb2.Schema())
-    feature_list = features.FEATURE_KEYS
-    label_key = features.LABEL_KEY
+    feature_list = Features.FEATURE_KEYS
+    label_key = Features.LABEL_KEY
   else:
     tf_transform_output = tft.TFTransformOutput(fn_args.transform_output)
     schema = tf_transform_output.transformed_metadata.schema
-    feature_list = [features.transformed_name(f) for f in features.FEATURE_KEYS]
-    label_key = features.transformed_name(features.LABEL_KEY)
+    feature_list = [transformed_name(f) for f in Features.FEATURE_KEYS]
+    label_key = transformed_name(Features.LABEL_KEY)
 
   mirrored_strategy = tf.distribute.MirroredStrategy()
   train_batch_size = (
-      constants.TRAIN_BATCH_SIZE * mirrored_strategy.num_replicas_in_sync)
+      ModelConstants.TRAIN_BATCH_SIZE * mirrored_strategy.num_replicas_in_sync)
   eval_batch_size = (
-      constants.EVAL_BATCH_SIZE * mirrored_strategy.num_replicas_in_sync)
+      ModelConstants.EVAL_BATCH_SIZE * mirrored_strategy.num_replicas_in_sync)
 
   train_dataset = _input_fn(
       fn_args.train_files,

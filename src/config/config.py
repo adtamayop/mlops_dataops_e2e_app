@@ -33,8 +33,8 @@ class Features:
     RAW_FEATURES = ["time", "open", "high", "low", "close", "volume"]
     RAW_INPUT_LABEL = "close"
     LABEL_KEY = "label"
-    df_train = pd.read_csv(f"{Paths.DATA_TEST_PATH_FILE}")
-    FEATURE_KEYS = list(df_train.columns.values)
+    _df_train = pd.read_csv(f"{Paths.DATA_TEST_PATH_FILE}")
+    FEATURE_KEYS = list(_df_train.columns.values)
     FEATURE_KEYS.remove(LABEL_KEY)
 
 class LabellingParams:
@@ -46,6 +46,14 @@ class LabellingParams:
     SHIFT = -(ROLLING_AVG_WINDOW_SIZE-1)
     N_TSTEPS = 20
 
+class ModelConstants:
+    HIDDEN_LAYER_UNITS = 25
+    OUTPUT_LAYER_UNITS = 3
+    NUM_LAYERS = 5
+    LEARNING_RATE = 0.001
+
+    TRAIN_BATCH_SIZE = 20
+    EVAL_BATCH_SIZE = 10
 
 
 

@@ -68,3 +68,9 @@ dvc remote add --default myremote \
 dvc remote modify storage --local gdrive_user_credentials_file build/gdrive-user-credentials.json
 
 dvc remote modify myremote --local gdrive_service_account_json_file_path build/gdrive-user-credentials.json
+
+
+
+Para volver el script ejecutable de creación de dataset
+
+chmod +x ./updatescript

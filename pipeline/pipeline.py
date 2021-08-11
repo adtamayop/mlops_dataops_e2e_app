@@ -1,3 +1,5 @@
+import os
+import sys
 from typing import List, Optional, Text
 
 import tensorflow_model_analysis as tfma
@@ -6,8 +8,15 @@ from tfx import v1 as tfx
 from tfx.proto import (bulk_inferrer_pb2, example_gen_pb2, pusher_pb2,
                        trainer_pb2, transform_pb2)
 
-from models import features
+# from models import features
 from pipeline.configs import EVAL_NUM_STEPS, TRAIN_NUM_STEPS, VAL_NUM_STEPS
+
+# TODO: Modify project structure for don't do this smell code
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+
+from src.config.config import Features
 
 
 def create_pipeline(
@@ -83,7 +92,7 @@ def create_pipeline(
   components.append(model_resolver)
 
   eval_config = tfma.EvalConfig(
-      model_specs=[tfma.ModelSpec(label_key=features.LABEL_KEY)],
+      model_specs=[tfma.ModelSpec(label_key=Features.LABEL_KEY)],
       slicing_specs=[tfma.SlicingSpec()],
       metrics_specs=[
           tfma.MetricsSpec(metrics=[
