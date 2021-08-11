@@ -29,7 +29,7 @@ jobs:
         pip install -r build/requirements.txt
     - name: Basics test
       run: |
-        pytest --ignore test/data/test_raw_data
+        pytest --ignore test/data/
     - name: Check out the repo
       uses: actions/checkout@v2
       with:
