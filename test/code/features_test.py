@@ -23,13 +23,13 @@ parentdir = os.path.dirname(currentdir)
 parentdir = os.path.dirname(parentdir)
 sys.path.append(parentdir)
 
-from models import features
+from src.config.config import Features
 
 
 class FeaturesTest(tf.test.TestCase):
 
   def testLabelKey(self):
-    self.assertNotIn(features.LABEL_KEY, features.FEATURE_KEYS)
+    self.assertNotIn(Features.LABEL_KEY, Features.FEATURE_KEYS)
 
 if __name__ == "__main__":
   tf.test.main()

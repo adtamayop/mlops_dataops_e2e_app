@@ -8,7 +8,7 @@ parentdir = os.path.dirname(currentdir)
 parentdir = os.path.dirname(parentdir)
 sys.path.append(parentdir)
 
-from models.features import transformed_name
+from models.preprocessing import transformed_name
 
 
 def test_features_names():
