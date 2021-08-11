@@ -5,7 +5,7 @@ python src/data/labelling.py
 python src/data/preprocess.py
 dvc add data/processed
 dvc add data/raw
-dvc commit 
+dvc commit
 git add data/processed.dvc data/raw.dvc
 dvc push
 git commit --no-verify -m "`date` updated dataset"
