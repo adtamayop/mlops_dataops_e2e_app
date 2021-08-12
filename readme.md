@@ -3,9 +3,8 @@
 This repository contains an application that integrates mlops and dataops methodologies
 
 TODO list:
-- Pasar constantes del modelo al archivo config
-- Archivo features, pasarlo a config
-- funcion transform name a preprocesed
+
+
 - Pasar modulo de modelos a src
 -  Arreglar los notebooks de ejecución local
 -  Paths del pipeline to the config file

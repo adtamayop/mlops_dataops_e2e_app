@@ -1,18 +1,18 @@
 ## DOCKER
 
-docker build --tag mlops_dataops_image build/
+docker build --tag mlops_dataops_image_2 build/.
 
 docker run \
-    --name mlops_dataops_image \
+    --name mlops_dataops_image_2 \
     --cpus="3.0" \
     --memory="6g" \
     --memory-reservation="3g" \
     -v $(pwd):/app \
-    -d mlops_dataops_image tail -f /dev/null
+    -d mlops_dataops_image_2 tail -f /dev/null
 
-docker exec -it mlops_dataops_image bash
+docker exec -it mlops_dataops_image_2 bash
 
-docker rm -f mlops_dataops_image
+docker rm -f mlops_dataops_image_2
 
 borrar todas las imagenes: docker system prune -a
 
