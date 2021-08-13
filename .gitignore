@@ -28,3 +28,4 @@ nohup.out
 htmlcov/
 .pytest_cache/
 *.DS_Store
+*.tar.gz

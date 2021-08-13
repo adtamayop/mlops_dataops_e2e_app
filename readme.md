@@ -22,6 +22,8 @@ TODO list:
 - Componente para la bajar los datos de predicción en producción
 - Pendientes test de integración de todo el pipeline
 - Configuración del archivo config del pipeline
+- opcional ejecución con dataflow
+
 CLOUD CONFIGURATION
 
 1. Crear proyecto: mlops-dataops-project   id: 	mlops-dataops-project
