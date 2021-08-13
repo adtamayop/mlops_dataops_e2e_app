@@ -112,6 +112,7 @@ matplotlib-inline==0.1.2
 mistune==0.8.4
 ml-metadata==1.0.0
 ml-pipelines-sdk==1.0.0
+mlflow==1.19.0
 munch==2.5.0
 nanotime==0.5.2
 nbclient==0.5.3

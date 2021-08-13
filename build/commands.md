@@ -74,3 +74,7 @@ dvc remote modify myremote --local gdrive_service_account_json_file_path build/g
 Para volver el script ejecutable de creación de dataset
 
 chmod +x ./updatescript
+
+
+
+tensorboard --logdir tfx_pipeline_output/mlops-dataops-pipeline/Trainer/model_run/

@@ -16,15 +16,22 @@
 A DNN keras model which uses features defined in Features.py and network
 parameters defined in ModelConstants.py.
 """
-
+import argparse
 import os
+import shutil
 import sys
+import tempfile
 from typing import List, Text
 
+import mlflow
+import mlflow.tensorflow
+import pandas as pd
 import tensorflow as tf
 import tensorflow_transform as tft
 from absl import logging
+from mlflow import pyfunc
 from tensorflow import keras
+from tensorflow.python.keras.models import Model
 from tensorflow_metadata.proto.v0 import schema_pb2
 from tensorflow_transform.tf_metadata import schema_utils
 from tfx import v1 as tfx
@@ -36,7 +43,8 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
 from models.preprocessing import transformed_name
-from src.config.config import Features, ModelConstants
+from src.config.config import (DownloadDataParams, Features, LabellingParams,
+                               ModelConstants)
 
 # from models import constants, features
 
@@ -128,58 +136,84 @@ def run_fn(fn_args: tfx.components.FnArgs):
   Args:
     fn_args: Holds args used to train the model as name/value pairs.
   """
-  if fn_args.transform_output is None:  # Transform is not used.
-    tf_transform_output = None
-    schema = tfx.utils.parse_pbtxt_file(fn_args.schema_file,
-                                        schema_pb2.Schema())
-    feature_list = Features.FEATURE_KEYS
-    label_key = Features.LABEL_KEY
-  else:
-    tf_transform_output = tft.TFTransformOutput(fn_args.transform_output)
-    schema = tf_transform_output.transformed_metadata.schema
-    feature_list = [transformed_name(f) for f in Features.FEATURE_KEYS]
-    label_key = transformed_name(Features.LABEL_KEY)
+  # Enable auto-logging to MLflow to capture TensorBoard metrics.
+  mlflow.tensorflow.autolog()
 
-  mirrored_strategy = tf.distribute.MirroredStrategy()
-  train_batch_size = (
-      ModelConstants.TRAIN_BATCH_SIZE * mirrored_strategy.num_replicas_in_sync)
-  eval_batch_size = (
-      ModelConstants.EVAL_BATCH_SIZE * mirrored_strategy.num_replicas_in_sync)
 
-  train_dataset = _input_fn(
-      fn_args.train_files,
-      fn_args.data_accessor,
-      schema,
-      label_key,
-      batch_size=train_batch_size)
-  eval_dataset = _input_fn(
-      fn_args.eval_files,
-      fn_args.data_accessor,
-      schema,
-      label_key,
-      batch_size=eval_batch_size)
+  with mlflow.start_run():
 
-  with mirrored_strategy.scope():
-    model = _build_keras_model(feature_list)
+    mlflow.log_param("SYMBOL", DownloadDataParams.SYMBOL)
+    mlflow.log_param("INTERVAL", DownloadDataParams.INTERVAL)
+    mlflow.log_param("HIDDEN_LAYER_UNITS", ModelConstants.HIDDEN_LAYER_UNITS)
+    mlflow.log_param("LEARNING_RATE", ModelConstants.LEARNING_RATE)
+    mlflow.log_param("NUM_LAYERS", ModelConstants.NUM_LAYERS)
+    mlflow.log_param("EVAL_BATCH_SIZE", ModelConstants.EVAL_BATCH_SIZE)
+    mlflow.log_param("TRAIN_BATCH_SIZE", ModelConstants.TRAIN_BATCH_SIZE)
+    mlflow.log_param("N_TSTEPS", LabellingParams.N_TSTEPS)
+    mlflow.log_param("ROLLING_AVG_WINDOW_SIZE", LabellingParams.ROLLING_AVG_WINDOW_SIZE)
+    mlflow.log_param("STATIONARY_THRESHOLD", LabellingParams.STATIONARY_THRESHOLD)
+    mlflow.log_param("RAW_INPUT_FEATURES", Features.RAW_INPUT_FEATURES)
+    # mlflow.log_artifact(fn_args.serving_model_dir)
 
-  # Write logs to path
-  tensorboard_callback = tf.keras.callbacks.TensorBoard(
-      log_dir=fn_args.model_run_dir, update_freq='batch')
+    if fn_args.transform_output is None:  # Transform is not used.
+      tf_transform_output = None
+      schema = tfx.utils.parse_pbtxt_file(fn_args.schema_file,
+                                          schema_pb2.Schema())
+      feature_list = Features.FEATURE_KEYS
+      label_key = Features.LABEL_KEY
+    else:
+      tf_transform_output = tft.TFTransformOutput(fn_args.transform_output)
+      schema = tf_transform_output.transformed_metadata.schema
+      feature_list = [transformed_name(f) for f in Features.FEATURE_KEYS]
+      label_key = transformed_name(Features.LABEL_KEY)
 
-  model.fit(
-      train_dataset,
-      steps_per_epoch=fn_args.train_steps,
-      validation_data=eval_dataset,
-      validation_steps=fn_args.eval_steps,
-      callbacks=[tensorboard_callback])
+    mirrored_strategy = tf.distribute.MirroredStrategy()
+    train_batch_size = (
+        ModelConstants.TRAIN_BATCH_SIZE * mirrored_strategy.num_replicas_in_sync)
+    eval_batch_size = (
+        ModelConstants.EVAL_BATCH_SIZE * mirrored_strategy.num_replicas_in_sync)
 
-  signatures = {
-      'serving_default':
-          _get_serve_tf_examples_fn(model, schema,
-                                    tf_transform_output).get_concrete_function(
-                                        tf.TensorSpec(
-                                            shape=[None],
-                                            dtype=tf.string,
-                                            name='examples')),
-  }
-  model.save(fn_args.serving_model_dir, save_format='tf', signatures=signatures)
+    train_dataset = _input_fn(
+        fn_args.train_files,
+        fn_args.data_accessor,
+        schema,
+        label_key,
+        batch_size=train_batch_size)
+    eval_dataset = _input_fn(
+        fn_args.eval_files,
+        fn_args.data_accessor,
+        schema,
+        label_key,
+        batch_size=eval_batch_size)
+
+    with mirrored_strategy.scope():
+      model = _build_keras_model(feature_list)
+
+    # log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    # tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+
+
+    # Write logs to path
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(
+        log_dir=fn_args.model_run_dir, update_freq='batch')
+
+
+
+    model.fit(
+        train_dataset,
+        steps_per_epoch=fn_args.train_steps,
+        validation_data=eval_dataset,
+        validation_steps=fn_args.eval_steps,
+        callbacks=[tensorboard_callback],
+        epochs=ModelConstants.EPOCHS)
+
+    signatures = {
+        'serving_default':
+            _get_serve_tf_examples_fn(model, schema,
+                                      tf_transform_output).get_concrete_function(
+                                          tf.TensorSpec(
+                                              shape=[None],
+                                              dtype=tf.string,
+                                              name='examples')),
+    }
+    model.save(fn_args.serving_model_dir, save_format='tf', signatures=signatures)
