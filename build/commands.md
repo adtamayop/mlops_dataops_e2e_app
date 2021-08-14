@@ -78,3 +78,5 @@ chmod +x ./updatescript
 
 
 tensorboard --logdir tfx_pipeline_output/mlops-dataops-pipeline/Trainer/model_run/
+
+mlflow ui https://www.mlflow.org/docs/latest/tracking.html

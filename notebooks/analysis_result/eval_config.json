@@ -1,0 +1,36 @@
+{
+  "evalConfig": {
+    "modelSpecs": [
+      {
+        "labelKey": "label"
+      }
+    ],
+    "slicingSpecs": [
+      {}
+    ],
+    "metricsSpecs": [
+      {
+        "metrics": [
+          {
+            "className": "BalancedAccuracy"
+          },
+          {
+            "className": "ConfusionMatrixPlot"
+          },
+          {
+            "className": "F1Score"
+          }
+        ],
+        "modelNames": [
+          ""
+        ]
+      }
+    ]
+  },
+  "version": "0.32.0",
+  "dataLocation": "/Users/atamayo/Desktop/nuevo/tfx_pipeline_output/mlops-dataops-pipeline/CsvExampleGen/examples/69/Split-test/",
+  "fileFormat": "tfrecords",
+  "modelLocations": {
+    "": "/Users/atamayo/Desktop/nuevo/tfx_pipeline_output/mlops-dataops-pipeline/serving_model/1628871645/"
+  }
+}
