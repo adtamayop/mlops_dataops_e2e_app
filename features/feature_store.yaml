@@ -1,5 +1,5 @@
 project: features
-registry: /path/to/registry.db
+registry: ../stores/feature/registry.db
 provider: local
 online_store:
-    path: /path/to/online_store.db
+    path: ../stores/feature/online_store.db

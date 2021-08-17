@@ -136,7 +136,6 @@ def run_fn(fn_args: tfx.components.FnArgs):
   Args:
     fn_args: Holds args used to train the model as name/value pairs.
   """
-  # Enable auto-logging to MLflow to capture TensorBoard metrics.
   mlflow.tensorflow.autolog()
 
 
@@ -189,15 +188,8 @@ def run_fn(fn_args: tfx.components.FnArgs):
     with mirrored_strategy.scope():
       model = _build_keras_model(feature_list)
 
-    # log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    # tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-
-
-    # Write logs to path
     tensorboard_callback = tf.keras.callbacks.TensorBoard(
         log_dir=fn_args.model_run_dir, update_freq='batch')
-
-
 
     model.fit(
         train_dataset,

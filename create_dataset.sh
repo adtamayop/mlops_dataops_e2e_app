@@ -3,6 +3,7 @@
 python src/data/merge_raw_data.py
 python src/data/labelling.py
 python src/data/preprocess.py
+pytest test/data/test_raw_data.py
 dvc add data/processed
 dvc add data/raw
 dvc commit
