@@ -70,6 +70,25 @@ dvc remote modify storage --local gdrive_user_credentials_file build/gdrive-user
 dvc remote modify myremote --local gdrive_service_account_json_file_path build/gdrive-user-credentials.json
 
 
+Manejo de versiones de datasets:
+
+1.  Dupliqué el contenido del dataset 1 para modificarlo
+2.  dvc add data/year1month1.csv
+3.  git add data/year1month1.csv.dvc
+4.  git commit -m "update datset"
+5.  dvc push
+
+En este punto ya tenemos 2 versiones diferentes de un mismo archivo, así que podríamos devolvernos con git
+
+git checkout HEAD^1 data/year1month1.csv.dvc
+dvc checkout
+git commit -m "revert dataset y1m1 to his original state"
+
+y ya hemos restaurado el dataset de year1month1 a su estado original sin duplicados
+
+
+
+
 
 Para volver el script ejecutable de creación de dataset
 
@@ -79,4 +98,6 @@ chmod +x ./updatescript
 
 tensorboard --logdir tfx_pipeline_output/mlops-dataops-pipeline/Trainer/model_run/
 
-mlflow ui https://www.mlflow.org/docs/latest/tracking.html
+mlflow ui
+
+https://www.mlflow.org/docs/latest/tracking.html
