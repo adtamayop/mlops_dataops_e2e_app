@@ -4,15 +4,14 @@ This repository contains an application that integrates mlops and dataops method
 
 TODO list:
 
-
+- Model card
+- Poetry + toml
 - Pasar modulo de modelos a src
--  Paths del pipeline to the config file
+- Paths del pipeline to the config file
 - Change features names
 - Add pytest coverage
 - LOAD api_key of alphavetage from environment
 - Guardar los datos con fechas de creación
-- Add poetry
-- Pendientes todas las formas de labelling
 - Pendientes test de integración de todo el pipeline volver a configurarlo
 - opcional ejecución con dataflow
 

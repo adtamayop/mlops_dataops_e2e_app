@@ -1,0 +1,5 @@
+outs:
+- md5: 02e285e13bece2a979ea069c16ec058d.dir
+  size: 70860638
+  nfiles: 2
+  path: raw_features

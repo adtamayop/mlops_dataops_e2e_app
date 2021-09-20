@@ -1,2 +1,5 @@
-/processed
 /raw
+/raw_features
+/raw_labelled
+/selected_features
+/train_data

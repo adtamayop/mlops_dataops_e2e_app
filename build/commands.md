@@ -1,18 +1,20 @@
 ## DOCKER
 
-docker build --tag mlops_dataops_image_2 build/.
+docker build --tag mlops_dataops_image build/.
 
 docker run \
-    --name mlops_dataops_image_2 \
+    --name mlops_dataops_image \
     --cpus="3.0" \
     --memory="6g" \
     --memory-reservation="3g" \
     -v $(pwd):/app \
-    -d mlops_dataops_image_2 tail -f /dev/null
+    -d mlops_dataops_image tail -f /dev/null
 
-docker exec -it mlops_dataops_image_2 bash
 
-docker rm -f mlops_dataops_image_2
+
+docker exec -it mlops_dataops_image bash
+
+docker rm -f mlops_dataops_image
 
 borrar todas las imagenes: docker system prune -a
 
@@ -27,8 +29,8 @@ borrar todas las imagenes: docker system prune -a
 4.  `git commit -m "....."`
 5. en la carpeta que quiero en google drive hay un id en la url
     `dvc remote add -d storage gdrive://URL_ID`
-    `dvc remote add -d storage gdrive://1_7fpAQRcq00YGoXhnDniZR809JS-1BHx`
-    dvc remote add --default myremote gdrive://1_7fpAQRcq00YGoXhnDniZR809JS-1BHx
+    `dvc remote add -d storage gdrive://11R7ZKkU1NF-5le3S5Z0Z23St9IlDcNa2`
+    dvc remote add --default myremote gdrive://11R7ZKkU1NF-5le3S5Z0Z23St9IlDcNa2
 6. `git commit ./dvc/config -m "Configure remote storage"`
 7. `dvc push` (puede que nos pida verificación)
 8. si elimino los archivos, con dvc pull los puedo traer
