@@ -1,5 +1,6 @@
 
 import json
+import math
 import os
 import sys
 
@@ -9,17 +10,23 @@ parentdir = os.path.dirname(currentdir)
 parentdir = os.path.dirname(parentdir)
 sys.path.append(parentdir)
 
-from src.config.config import DownloadDataParams
+from src.config.config import DownloadDataParams, Features
 
 
-def test_months_to_download():
-    month = DownloadDataParams.MONTHS_TO_DOWNLOAD
-    assert(month>0 and month<13)
+def test_type_donwload_data():
+    type_data = DownloadDataParams.DATA_TYPE
+    assert(type_data=="csv" or type_data=="json")
 
-def test_years_to_download():
-    year = month = DownloadDataParams.YEARS_TO_DOWNLOAD
-    assert(year>0 and year<3)
+def test_n_features_perfect_root():
+    assert(math.sqrt(Features.N_FEATURES).is_integer())
+
+def test_minimum_img_size():
+    assert(math.sqrt(Features.N_FEATURES)>=10)
+
 
 if __name__ == "__main__":
-    test_months_to_download()
-    test_years_to_download()
+    # test_months_to_download()
+    # test_years_to_download()
+    test_type_donwload_data()
+    test_n_features_perfect_root()
+    test_minimum_img_size()

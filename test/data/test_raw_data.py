@@ -46,15 +46,8 @@ def test_unique_content():
             print(f"{a} file is equal to {b} file")
             raise AssertionError
 
-# def test_uniques_name_file():
-#     all_files = listdir(SEPARATED_FILES_PATH)
-#     unique_files = set(all_files)
-#     assert(len(all_files)==len(unique_files))
-
-
 if __name__ == "__main__":
     test_size_file()
     test_unique_date()
     test_rows()
     test_unique_content()
-    # test_uniques_name_file()

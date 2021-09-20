@@ -17,19 +17,19 @@ from src.config.config import Features, Paths
 
 @pytest.fixture
 def df():
-    pandas_df = pd.read_csv(f"{Paths.DATA_RAW_JOIN_PATH}{Paths.JOIN_NAME_DATASET}")
+    pandas_df = pd.read_csv(f"{Paths.RAW_DATA_FILE}")
     df = ge.from_pandas(pandas_df)
     return df
 
 def test_expected_columns(df):
     # Presence of features
-    expected_columns = Features.RAW_FEATURES
+    expected_columns = Features.RAW_INPUT_FEATURES
     results = df.expect_table_columns_to_match_set(column_set=expected_columns, exact_match=True)
     assert(results["success"])
 
 def test_duplicates_dates(df):
     # Unique
-    results = df.expect_column_values_to_be_unique(column="time")
+    results = df.expect_column_values_to_be_unique(column=f"{Features.DATE_FEATURE_NAME}")
     assert(results["success"])
 
 def test_null_close(df):

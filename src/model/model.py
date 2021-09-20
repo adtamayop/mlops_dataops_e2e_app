@@ -5,6 +5,8 @@ from typing import List
 
 import absl
 import kerastuner as keras_tuner
+import mlflow
+import mlflow.tensorflow
 import tensorflow as tf
 import tensorflow_transform as tft
 from absl import logging
@@ -118,7 +120,7 @@ def _get_hyperparameters() -> keras_tuner.HyperParameters:
   hp = keras_tuner.HyperParameters()
   # Defines search space.
   hp.Choice('learning_rate', [1e-2, 1e-3], default=1e-2)
-  hp.Int('num_layers', 1, 3, 5, default=2)
+  hp.Choice('dense_layer_1', [16,32,64], default=32)
   return hp
 
 
@@ -143,7 +145,7 @@ def _make_keras_model(hparams: keras_tuner.HyperParameters) -> tf.keras.Model:
     kernel_initializer='glorot_uniform')(d)
 
   d = tf.keras.layers.Flatten()(d)
-  d = keras.layers.Dense(8, activation='relu')(d)
+  d = keras.layers.Dense(hparams.get("dense_layer_1"), activation='relu')(d)
 
   outputs = keras.layers.Dense(3, activation='softmax')(d)
 
@@ -210,6 +212,7 @@ def tuner_fn(fn_args: tfx.components.FnArgs) -> tfx.components.TunerFnResult:
 
 
 def run_fn(fn_args: tfx.components.FnArgs):
+
   """Train the model based on given args.
 
   Args:
@@ -241,6 +244,16 @@ def run_fn(fn_args: tfx.components.FnArgs):
   mirrored_strategy = tf.distribute.MirroredStrategy()
   with mirrored_strategy.scope():
     model = _make_keras_model(hparams)
+
+  mlflow.tensorflow.autolog()
+
+  with mlflow.start_run():
+      mlflow.log_param("learning_rate", hparams.get('learning_rate'))
+      mlflow.log_param("Dense_1 units", hparams.get('dense_layer_1'))
+      # mlflow.log_artifact(fn_args.serving_model_dir)
+
+
+
 
   # Write logs to path
   tensorboard_callback = tf.keras.callbacks.TensorBoard(

@@ -19,6 +19,7 @@ class Paths:
     RAW_LABELLED_DATA_PATH = os.path.join(ROOT_DATA_PATH, "raw_labelled")
     SELECTED_FEATURES_DATA_PATH = os.path.join(ROOT_DATA_PATH, "selected_features")
     RAW_DATA_FILE = os.path.join(RAW_DATA_PATH,f"raw_{DownloadDataParams.COMPANY_CODE}.csv")
+
     RAW_FEATURES_DATA_FILE = os.path.join(RAW_FEATURES_DATA_PATH,f"raw_features_{DownloadDataParams.COMPANY_CODE}.csv")
     RAW_LABELLED_DATA_FILE = os.path.join(RAW_LABELLED_DATA_PATH,f"raw_labelled_{DownloadDataParams.COMPANY_CODE}.csv")
 
