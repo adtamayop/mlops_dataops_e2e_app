@@ -1,0 +1,5 @@
+outs:
+- md5: 17ffc152d228eb21d1a98c057daef8b1.dir
+  size: 52689711
+  nfiles: 115
+  path: pipelines

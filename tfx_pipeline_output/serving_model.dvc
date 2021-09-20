@@ -1,0 +1,5 @@
+outs:
+- md5: 0804bcd2ab7858e061646c9282959f1c.dir
+  size: 6502008
+  nfiles: 8
+  path: serving_model

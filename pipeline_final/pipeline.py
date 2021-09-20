@@ -9,7 +9,7 @@ import tensorflow_model_analysis as tfma
 from absl import flags
 from tfx import v1 as tfx
 from tfx.dsl.experimental.conditionals import conditional
-from tfx.proto import bulk_inferrer_pb2
+from tfx.proto import bulk_inferrer_pb2, example_gen_pb2, transform_pb2
 
 from src.config.config import Features
 from src.preprocessing.preprocessing import transformed_name
@@ -19,10 +19,6 @@ _penguin_root = os.path.join(".")
 _data_root = os.path.join(_penguin_root, 'data/train_data/WMT/train/')
 
 _tfx_root = os.path.join(_penguin_root, 'tfx_pipeline_output')
-
-_examplegen_input_config = None
-_examplegen_range_config = None
-_resolver_range_config = None
 
 
 def _create_pipeline(
@@ -37,9 +33,6 @@ def _create_pipeline(
     user_provided_schema_path: Optional[str],
     enable_tuning: bool,
     enable_bulk_inferrer: bool,
-    examplegen_input_config: Optional[tfx.proto.Input],
-    examplegen_range_config: Optional[tfx.proto.RangeConfig],
-    resolver_range_config: Optional[tfx.proto.RangeConfig],
     enable_transform_input_cache: bool
 ) -> tfx.dsl.Pipeline:
   """Implements the penguin pipeline with TFX.
@@ -70,10 +63,15 @@ def _create_pipeline(
   Returns:
     A TFX pipeline object.
   """
-  example_gen = tfx.components.CsvExampleGen(
-  input_base=os.path.join(data_root),
-  input_config=examplegen_input_config,
-range_config=examplegen_range_config)
+  input = example_gen_pb2.Input(
+        splits=[
+            example_gen_pb2.Input.Split(name="train", pattern="train/*"),
+            example_gen_pb2.Input.Split(name="validation", pattern="val/*"),
+            example_gen_pb2.Input.Split(name="test", pattern="test/*"),
+        ]
+    )
+
+  example_gen = tfx.components.CsvExampleGen(input_base=data_root, input_config=input)
 
   # Computes statistics over data for visualization and example validation.
   statistics_gen = tfx.components.StatisticsGen(
@@ -98,15 +96,15 @@ range_config=examplegen_range_config)
       statistics=statistics_gen.outputs['statistics'], schema=schema)
 
   # Gets multiple Spans for transform and training.
-  if resolver_range_config:
-    examples_resolver = tfx.dsl.Resolver(
-        strategy_class=tfx.dsl.experimental.SpanRangeStrategy,
-        config={
-            'range_config': resolver_range_config
-        },
-        examples=tfx.dsl.Channel(
-            type=tfx.types.standard_artifacts.Examples,
-            producer_component_id=example_gen.id)).with_id('span_resolver')
+  # if resolver_range_config:
+  #   examples_resolver = tfx.dsl.Resolver(
+  #       strategy_class=tfx.dsl.experimental.SpanRangeStrategy,
+  #       config={
+  #           'range_config': resolver_range_config
+  #       },
+  #       examples=tfx.dsl.Channel(
+  #           type=tfx.types.standard_artifacts.Examples,
+  #           producer_component_id=example_gen.id)).with_id('span_resolver')
 
   # Performs transformations and feature engineering in training and serving.
   if enable_transform_input_cache:
@@ -119,10 +117,11 @@ range_config=examplegen_range_config)
     tft_resolved_cache = None
 
   transform = tfx.components.Transform(
-      examples=(examples_resolver.outputs['examples']
-                if resolver_range_config else example_gen.outputs['examples']),
+      examples=example_gen.outputs['examples'],
       schema=schema,
       module_file=preprocess_file,
+          splits_config=transform_pb2.SplitsConfig(
+          analyze=["train"], transform=["train", "validation", "test"]),
       analyzer_cache=tft_resolved_cache)
 
   # Tunes the hyperparameters for model training based on user-provided Python
@@ -133,8 +132,8 @@ range_config=examplegen_range_config)
         module_file=module_file,
         examples=transform.outputs['transformed_examples'],
         transform_graph=transform.outputs['transform_graph'],
-        train_args=tfx.proto.TrainArgs(num_steps=20),
-        eval_args=tfx.proto.EvalArgs(num_steps=5))
+        train_args=tfx.proto.TrainArgs(splits=["train"], num_steps=20),
+        eval_args=tfx.proto.EvalArgs(splits=["validation"], num_steps=5))
 
   # Uses user-provided Python function that trains a model.
   trainer = tfx.components.Trainer(
@@ -159,9 +158,9 @@ range_config=examplegen_range_config)
       #   hyperparameters = hparams_importer.outputs['result'],
       hyperparameters=(tuner.outputs['best_hyperparameters']
                        if enable_tuning else None),
-      train_args=tfx.proto.TrainArgs(num_steps=100),
-      eval_args=tfx.proto.EvalArgs(num_steps=5))
-
+      train_args=tfx.proto.TrainArgs(splits=["train"], num_steps=100),
+      eval_args=tfx.proto.EvalArgs(splits=["validation"], num_steps=5),
+      )
 
   # Get the latest blessed model for model validation.
   model_resolver = tfx.dsl.Resolver(
@@ -199,7 +198,8 @@ range_config=examplegen_range_config)
       examples=example_gen.outputs['examples'],
       model=trainer.outputs['model'],
       baseline_model=model_resolver.outputs['model'],
-      eval_config=eval_config)
+      eval_config=eval_config,
+      example_splits=["test"])
 
   # make_warmup = True
 
@@ -313,8 +313,8 @@ range_config=examplegen_range_config)
     components_list.append(schema_importer)
   else:
     components_list.append(schema_gen)
-  if resolver_range_config:
-    components_list.append(examples_resolver)
+  # if resolver_range_config:
+  #   components_list.append(examples_resolver)
   if enable_transform_input_cache:
     components_list.append(transform_cache_resolver)
   if enable_tuning:

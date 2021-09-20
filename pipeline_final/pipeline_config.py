@@ -16,11 +16,16 @@ if execution_type == "LOCAL":
 
     _root = os.path.join(".")
 
+    # _data_root = os.path.join(
+    #     _root,
+    #     Paths.TRAINING_DATA_PATH,
+    #     DownloadDataParams.COMPANY_CODE,
+    #     "train/")
+
     _data_root = os.path.join(
         _root,
         Paths.TRAINING_DATA_PATH,
-        DownloadDataParams.COMPANY_CODE,
-        "train/")
+        DownloadDataParams.COMPANY_CODE)
 
     _tfx_root = os.path.join(_root, 'tfx_pipeline_output')
 
