@@ -62,6 +62,12 @@ repos:
         types: [python]
         pass_filenames: false
 
+      - id: inline-pylint-with-bash
+        name: inline-pylint-with-bash
+        entry: bash -c 'generate_coverage_report.sh'
+        language: system
+        types: [python]
+        pass_filenames: false
   # - repo: local
   #   hooks:
   #     - id: pytest-check
