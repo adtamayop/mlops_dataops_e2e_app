@@ -1,7 +1,7 @@
 #!/bin/bash
 python src/data/get_external_data.py
-python src/data/create_dataset.py
 pytest test/data/test_raw_data.py
+python src/data/create_dataset.py
 dvc add data/raw
 dvc add data/raw_features
 dvc add data/raw_labelled
