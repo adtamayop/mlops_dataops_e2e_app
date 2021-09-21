@@ -57,15 +57,15 @@ repos:
     hooks:
       - id: custom-script-file
         name: custom-script-file
-        entry: ./generate_coverage_report.sh
+        entry: generate_coverage_report.sh
         language: script
         types: [python]
         pass_filenames: false
 
       - id: inline-pylint-with-bash
         name: inline-pylint-with-bash
-        entry: bash -c 'generate_coverage_report.sh'
-        language: system
+        entry: bash generate_coverage_report.sh
+        language: script
         types: [python]
         pass_filenames: false
   # - repo: local
