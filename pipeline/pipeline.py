@@ -3,6 +3,7 @@ import os
 import sys
 from typing import List, Optional, Text
 
+import tensorflow as tf
 import tensorflow_model_analysis as tfma
 from ml_metadata.proto import metadata_store_pb2
 from tfx import v1 as tfx
@@ -92,21 +93,47 @@ def create_pipeline(
               'latest_blessed_model_resolver')
   components.append(model_resolver)
 
+
+  metrics = [
+        tf.keras.metrics.SparseCategoricalCrossentropy(
+            name='sparse_categorical_crossentropy'),
+        tf.keras.metrics.SparseCategoricalAccuracy(name='accuracy'),
+        tf.keras.metrics.Precision(name='precision'),
+        tf.keras.metrics.Recall(name='recall'),
+        tfma.metrics.MultiClassConfusionMatrixPlot(
+            name='multi_class_confusion_matrix_plot'),
+    ]
+
+  metrics_specs = tfma.metrics.specs_from_metrics(metrics)
+
+
   eval_config = tfma.EvalConfig(
       model_specs=[tfma.ModelSpec(label_key=Features.LABEL_KEY)],
       slicing_specs=[tfma.SlicingSpec()],
-      metrics_specs=[
-          tfma.MetricsSpec(metrics=[
-              tfma.MetricConfig(
-                  class_name='SparseCategoricalAccuracy',
-                  threshold=tfma.MetricThreshold(
-                      value_threshold=tfma.GenericValueThreshold(
-                          lower_bound={'value': eval_accuracy_threshold}),
-                      change_threshold=tfma.GenericChangeThreshold(
-                          direction=tfma.MetricDirection.HIGHER_IS_BETTER,
-                          absolute={'value': -1e-10})))
-          ])
-      ])
+      metrics_specs= metrics_specs
+
+    #   [
+    #       tfma.MetricsSpec(
+    #           metrics=[
+
+                # tfma.MetricConfig(
+                #     class_name='SparseCategoricalAccuracy',
+                #     threshold=tfma.MetricThreshold(
+                #         value_threshold=tfma.GenericValueThreshold(
+                #             lower_bound={'value': eval_accuracy_threshold}),
+                #         change_threshold=tfma.GenericChangeThreshold(
+                #             direction=tfma.MetricDirection.HIGHER_IS_BETTER,
+                #             absolute={'value': -1e-10}))
+                # ),
+                # tfma.metrics.ConfusionMatrixPlot(
+                #     name = "CONFUSION_MATRIX_PLOT_NAME"
+                # ),
+                # tfma.metrics.F1Score(
+                #     name = "F1_SCORE_NAME"
+                # )
+        #   ])
+    #   ]
+      )
   evaluator = tfx.components.Evaluator(  # pylint: disable=unused-variable
       examples=example_gen.outputs['examples'],
       model=trainer.outputs['model'],

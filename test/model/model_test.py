@@ -10,13 +10,13 @@
 # parentdir = os.path.dirname(parentdir)
 # sys.path.append(parentdir)
 
-# from models import model
+# from src.model.model import _make_keras_model
 
 
 # class ModelTest(tf.test.TestCase):
 
 #   def testBuildKerasModel(self):
-#     built_model = model._build_keras_model(['foo', 'bar'])
+#     built_model = _make_keras_model(['foo', 'bar'])
 #     self.assertEqual(len(built_model.inputs), 2)
 
 # if __name__ == '__main__':

@@ -58,16 +58,34 @@ class Features:
     # RAW_INPUT_LABEL = "close"
     # LABEL_KEY = "label"
     LABEL_KEY = "labels"
-    _df_train = pd.read_csv(
-        os.path.join(
+
+    path_data_features = os.path.join(
            Paths.TRAINING_DATA_PATH,
            DownloadDataParams.COMPANY_CODE,
            "train",
            "train.csv"
         )
-    )
+
+    if os.path.exists(path_data_features):
+
+        _df_train = pd.read_csv(
+            path_data_features
+        )
+    else:
+
+        _df_train = pd.read_csv(
+            os.path.join(
+                Paths.ROOT_DATA_PATH,
+                "test_dataset",
+                "train",
+                "train.csv"
+            )
+        )
+
+
     FEATURE_KEYS = list(_df_train.columns.values)
     FEATURE_KEYS.remove(LABEL_KEY)
+
 
 # class LabellingParams:
 #     # UP = 0

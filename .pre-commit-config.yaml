@@ -52,26 +52,20 @@ repos:
         stages:
           - post-checkout
         always_run: true
-
   - repo: local
     hooks:
-      - id: custom-script-file
-        name: custom-script-file
-        entry: /app/generate_coverage_report.sh
-        language: script
-        types: [python]
+      - id: pytest-check
+        name: pytest-check
+        entry: pytest
+        language: system
         pass_filenames: false
+        always_run: true
 
-      - id: inline-pylint-with-bash
-        name: inline-pylint-with-bash
-        entry: bash generate_coverage_report.sh
-        language: script
-        types: [python]
   # - repo: local
   #   hooks:
-  #     - id: pytest-check
-  #       name: pytest-check
-  #       entry: pytest
+  #     - id: coverage
+  #       name: coverage
+  #       entry: bash generate_coverage_report.sh
   #       language: system
   #       pass_filenames: false
   #       always_run: true

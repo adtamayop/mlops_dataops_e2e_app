@@ -15,13 +15,6 @@ from tensorflow.python.keras import constraints
 from tensorflow.python.keras.backend import constant
 from tfx import v1 as tfx
 
-# from tfx.examples.penguin import penguin_utils_base as base
-
-
-
-
-
-
 # TODO: Modify project structure for don't do this smell code
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
@@ -120,7 +113,14 @@ def _get_hyperparameters() -> keras_tuner.HyperParameters:
   hp = keras_tuner.HyperParameters()
   # Defines search space.
   hp.Choice('learning_rate', [1e-2, 1e-3], default=1e-2)
-  hp.Choice('dense_layer_1', [16,32,64], default=32)
+  hp.Choice('conv2d_layer_1',[16,32,64], default=32)
+  hp.Choice('conv2d_kernel_size_1',[2, 3], default=3)
+  hp.Choice('conv2d_strides_1',[1, 2], default=1)
+  hp.Choice('activation_layer_1',["relu", "sigmoid"], default="relu")
+  hp.Choice('dropout', [0.1, 0.2, 0.3], default=0.2)
+  hp.Choice('dense_layer_2', [16,32,64], default=32)
+  hp.Choice('dense_layers', [1,2,4], default=2)
+  hp.Choice('dense_layer_n', [16,32,64], default=32)
   return hp
 
 
@@ -144,8 +144,15 @@ def _make_keras_model(hparams: keras_tuner.HyperParameters) -> tf.keras.Model:
     activation="relu", use_bias=True,
     kernel_initializer='glorot_uniform')(d)
 
+  d = tf.keras.layers.Dropout(hparams.get("dropout"))(d)
+
+
   d = tf.keras.layers.Flatten()(d)
-  d = keras.layers.Dense(hparams.get("dense_layer_1"), activation='relu')(d)
+  d = keras.layers.Dense(hparams.get("dense_layer_2"), activation='relu')(d)
+
+  for _ in range(hparams.get("dense_layers")):
+        d = keras.layers.Dense(
+          hparams.get("dense_layer_n"), activation="relu")(d)
 
   outputs = keras.layers.Dense(3, activation='softmax')(d)
 
@@ -180,12 +187,12 @@ def tuner_fn(fn_args: tfx.components.FnArgs) -> tfx.components.TunerFnResult:
   """
   tuner = keras_tuner.RandomSearch(
       _make_keras_model,
-      max_trials=6,
+      max_trials=1,
       hyperparameters=_get_hyperparameters(),
       allow_new_entries=False,
       objective=keras_tuner.Objective('val_sparse_categorical_accuracy', 'max'),
       directory=fn_args.working_dir,
-      project_name='penguin_tuning')
+      project_name='pipeline_tuning')
 
   transform_graph = tft.TFTransformOutput(fn_args.transform_graph_path)
 
@@ -249,22 +256,26 @@ def run_fn(fn_args: tfx.components.FnArgs):
 
   with mlflow.start_run():
       mlflow.log_param("learning_rate", hparams.get('learning_rate'))
-      mlflow.log_param("Dense_1 units", hparams.get('dense_layer_1'))
+      mlflow.log_param("Dense_1 units", hparams.get('dense_layer_2'))
+      mlflow.log_param("conv2d_layer_1 units", hparams.get('conv2d_layer_1'))
+      mlflow.log_param("conv2d_kernel_size_1", hparams.get('conv2d_kernel_size_1'))
+      mlflow.log_param("conv2d_strides_1", hparams.get('conv2d_strides_1'))
+      mlflow.log_param("activation_layer_1", hparams.get('activation_layer_1'))
+      mlflow.log_param("dropout", hparams.get('dropout'))
+      mlflow.log_param("dense_layer_2 units", hparams.get('dense_layer_2'))
+      mlflow.log_param("dense_layers aditionals", hparams.get('dense_layers'))
       # mlflow.log_artifact(fn_args.serving_model_dir)
 
+      # Write logs to path
+      tensorboard_callback = tf.keras.callbacks.TensorBoard(
+          log_dir=fn_args.model_run_dir, update_freq='batch')
 
+      model.fit(
+          train_dataset,
+          steps_per_epoch=fn_args.train_steps,
+          validation_data=eval_dataset,
+          validation_steps=fn_args.eval_steps,
+          callbacks=[tensorboard_callback])
 
-
-  # Write logs to path
-  tensorboard_callback = tf.keras.callbacks.TensorBoard(
-      log_dir=fn_args.model_run_dir, update_freq='batch')
-
-  model.fit(
-      train_dataset,
-      steps_per_epoch=fn_args.train_steps,
-      validation_data=eval_dataset,
-      validation_steps=fn_args.eval_steps,
-      callbacks=[tensorboard_callback])
-
-  signatures = make_serving_signatures(model, tf_transform_output)
-  model.save(fn_args.serving_model_dir, save_format='tf', signatures=signatures)
+      signatures = make_serving_signatures(model, tf_transform_output)
+      model.save(fn_args.serving_model_dir, save_format='tf', signatures=signatures)
