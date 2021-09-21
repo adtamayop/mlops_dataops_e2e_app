@@ -57,7 +57,7 @@ repos:
     hooks:
       - id: custom-script-file
         name: custom-script-file
-        entry: generate_coverage_report.sh
+        entry: /app/generate_coverage_report.sh
         language: script
         types: [python]
         pass_filenames: false
@@ -67,7 +67,6 @@ repos:
         entry: bash generate_coverage_report.sh
         language: script
         types: [python]
-        pass_filenames: false
   # - repo: local
   #   hooks:
   #     - id: pytest-check
