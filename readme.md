@@ -6,14 +6,13 @@ TODO list:
 
 - Model card
 - Poetry + toml
-- Pasar modulo de modelos a src
-- Paths del pipeline to the config file
-- Change features names
-- Add pytest coverage
 - LOAD api_key of alphavetage from environment
 - Guardar los datos con fechas de creación
 - Pendientes test de integración de todo el pipeline volver a configurarlo
 - opcional ejecución con dataflow
+- Feature store (Feast)
+- Serving
+
 
 CLOUD CONFIGURATION
 

@@ -1,14 +1,14 @@
-import os
-import sys
+# import os
+# import sys
 
-import tensorflow as tf
+# import tensorflow as tf
 
-# TODO: code smell of project estructure
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-# parentdir = os.path.dirname(parentdir)
-sys.path.append(parentdir)
-# from src.pipeline import preprocessing  # NOQA: E402 (tengo que importarlo así)
+# # TODO: code smell of project estructure
+# currentdir = os.path.dirname(os.path.realpath(__file__))
+# parentdir = os.path.dirname(currentdir)
+# # parentdir = os.path.dirname(parentdir)
+# sys.path.append(parentdir)
+# # from src.pipeline import preprocessing  # NOQA: E402 (tengo que importarlo así)
 
 
 # class UtilsTest(tf.test.TestCase):
@@ -20,10 +20,10 @@ sys.path.append(parentdir)
 #         xfm_key = preprocessing.transformed_name(key)
 #         self.assertEqual(xfm_key, "fare_xf")
 
-    # def testUtils(self):
-    #     pass
+#     def testUtils(self):
+#         pass
 
 
-if __name__ == "__name__":
-    # UtilsTest()
-    pass
+# if __name__ == "__name__":
+#     # UtilsTest()
+#     pass

@@ -95,11 +95,8 @@ def create_pipeline(
 
 
   metrics = [
-        tf.keras.metrics.SparseCategoricalCrossentropy(
-            name='sparse_categorical_crossentropy'),
-        tf.keras.metrics.SparseCategoricalAccuracy(name='accuracy'),
-        tf.keras.metrics.Precision(name='precision'),
-        tf.keras.metrics.Recall(name='recall'),
+        tf.keras.metrics.SparseCategoricalCrossentropy(name='sparse_categorical_crossentropy'),
+        tf.keras.metrics.SparseCategoricalAccuracy(name="SparseCategoricalAccuracy"),
         tfma.metrics.MultiClassConfusionMatrixPlot(
             name='multi_class_confusion_matrix_plot'),
     ]

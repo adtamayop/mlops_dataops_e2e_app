@@ -5,6 +5,7 @@ import sys
 from typing import List, Optional
 
 import absl
+import tensorflow as tf
 import tensorflow_model_analysis as tfma
 from absl import flags
 from tfx import v1 as tfx
@@ -127,6 +128,7 @@ def _create_pipeline(
   # Tunes the hyperparameters for model training based on user-provided Python
   # function. Note that once the hyperparameters are tuned, you can drop the
   # Tuner component from pipeline and feed Trainer with tuned hyperparameters.
+  enable_tuning=False
   if enable_tuning:
     tuner = tfx.components.Tuner(
         module_file=module_file,
@@ -170,6 +172,24 @@ def _create_pipeline(
           type=tfx.types.standard_artifacts.ModelBlessing)).with_id(
               'latest_blessed_model_resolver')
 
+  metrics = [
+        tfma.MetricConfig(
+        class_name='SparseCategoricalAccuracy',
+        threshold=tfma.MetricThreshold(
+            value_threshold=tfma.GenericValueThreshold(
+                lower_bound={'value': accuracy_threshold}),
+            # Change threshold will be ignored if there is no
+            # baseline model resolved from MLMD (first run).
+            change_threshold=tfma.GenericChangeThreshold(
+                direction=tfma.MetricDirection.HIGHER_IS_BETTER,
+                absolute={'value': -1e-10}))),
+        tfma.metrics.MultiClassConfusionMatrixPlot(
+            name='multi_class_confusion_matrix_plot'),
+        tfma.metrics.F1Score(
+            name='F1Score'),
+    ]
+
+  # metrics_specs = tfma.metrics.specs_from_metrics(metrics)
   # Uses TFMA to compute evaluation statistics over features of a model and
   # perform quality validation of a candidate model (compared to a baseline).
   eval_config = tfma.EvalConfig(
@@ -181,7 +201,11 @@ def _create_pipeline(
       ],
       slicing_specs=[tfma.SlicingSpec()],
       metrics_specs=[
-          tfma.MetricsSpec(metrics=[
+        tfma.MetricsSpec(
+            metrics=[
+              tfma.MetricConfig(class_name='ExampleCount'),
+              tfma.MetricConfig(class_name="MultiClassConfusionMatrixPlot"),
+              tfma.MetricConfig(class_name='F1Score'),
               tfma.MetricConfig(
                   class_name='SparseCategoricalAccuracy',
                   threshold=tfma.MetricThreshold(
@@ -191,9 +215,14 @@ def _create_pipeline(
                       # baseline model resolved from MLMD (first run).
                       change_threshold=tfma.GenericChangeThreshold(
                           direction=tfma.MetricDirection.HIGHER_IS_BETTER,
-                          absolute={'value': -1e-10})))
-          ])
-      ])
+                          absolute={'value': -1e-10}))),
+
+            ]
+          ),
+        ]
+      )
+
+
   evaluator = tfx.components.Evaluator(
       examples=example_gen.outputs['examples'],
       model=trainer.outputs['model'],
@@ -220,8 +249,6 @@ def _create_pipeline(
 
   # # Checks whether the model passed the validation steps and pushes the model
   # # to a file destination if check passed.
-
-
 
   # # Checks whether the model passed the validation steps and pushes the model
   # # to a file destination if check passed.

@@ -4,9 +4,9 @@ docker build --tag mlops_dataops_image build/.
 
 docker run \
     --name mlops_dataops_image \
-    --cpus="3.0" \
-    --memory="6g" \
-    --memory-reservation="3g" \
+    --cpus="9.0" \
+    --memory="10g" \
+    --memory-reservation="8g" \
     -v $(pwd):/app \
     -d mlops_dataops_image tail -f /dev/null
 
@@ -98,7 +98,7 @@ chmod +x ./updatescript
 
 
 
-tensorboard --logdir tfx_pipeline_output/mlops-dataops-pipeline/Trainer/model_run/
+tensorboard --logdir /app/tfx_pipeline_output/pipelines/local_pipeline/Trainer/model_run/
 
 mlflow ui
 

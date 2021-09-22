@@ -10,7 +10,9 @@ import mlflow.tensorflow
 import tensorflow as tf
 import tensorflow_transform as tft
 from absl import logging
+from metrics import f1_metric, f1_weighted
 from tensorflow import keras
+from tensorflow.keras.utils import get_custom_objects
 from tensorflow.python.keras import constraints
 from tensorflow.python.keras.backend import constant
 from tfx import v1 as tfx
@@ -112,7 +114,7 @@ def _get_hyperparameters() -> keras_tuner.HyperParameters:
   """Returns hyperparameters for building Keras model."""
   hp = keras_tuner.HyperParameters()
   # Defines search space.
-  hp.Choice('learning_rate', [1e-2, 1e-3], default=1e-2)
+  hp.Choice('learning_rate', [0.01, 0.001], default= 0.001)
   hp.Choice('conv2d_layer_1',[16,32,64], default=32)
   hp.Choice('conv2d_kernel_size_1',[2, 3], default=3)
   hp.Choice('conv2d_strides_1',[1, 2], default=1)
@@ -124,6 +126,8 @@ def _get_hyperparameters() -> keras_tuner.HyperParameters:
   return hp
 
 
+
+
 def _make_keras_model(hparams: keras_tuner.HyperParameters) -> tf.keras.Model:
   """Creates a DNN Keras model for classifying penguin data.
 
@@ -133,6 +137,9 @@ def _make_keras_model(hparams: keras_tuner.HyperParameters) -> tf.keras.Model:
   Returns:
     A Keras Model.
   """
+
+  get_custom_objects().update({"f1_metric": f1_metric, "f1_weighted": f1_weighted})
+
   inputs = [
       keras.layers.Input(shape=(1,), name=transformed_name(f))
       for f in Features.FEATURE_KEYS
@@ -157,10 +164,17 @@ def _make_keras_model(hparams: keras_tuner.HyperParameters) -> tf.keras.Model:
   outputs = keras.layers.Dense(3, activation='softmax')(d)
 
   model = keras.Model(inputs=inputs, outputs=outputs)
+
+
+
+  optimizer=keras.optimizers.Adam(hparams.get('learning_rate'))
+
   model.compile(
-      optimizer=keras.optimizers.Adam(hparams.get('learning_rate')),
+      optimizer=optimizer,
       loss='sparse_categorical_crossentropy',
-      metrics=[keras.metrics.SparseCategoricalAccuracy()])
+      metrics=[keras.metrics.SparseCategoricalAccuracy()
+              # tf.keras.metrics.Precision()
+              ])
 
   model.summary(print_fn=absl.logging.info)
   return model
@@ -270,12 +284,22 @@ def run_fn(fn_args: tfx.components.FnArgs):
       tensorboard_callback = tf.keras.callbacks.TensorBoard(
           log_dir=fn_args.model_run_dir, update_freq='batch')
 
+
+      es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1,
+                    patience=100, min_delta=0.0001)
+
+      rlp = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.02, patience=20, verbose=1, mode='min',
+                              min_delta=0.001, cooldown=1, min_lr=0.0001)
+
+
+
       model.fit(
           train_dataset,
+          epochs = 10,
           steps_per_epoch=fn_args.train_steps,
           validation_data=eval_dataset,
           validation_steps=fn_args.eval_steps,
-          callbacks=[tensorboard_callback])
+          callbacks=[tensorboard_callback, es, rlp])
 
       signatures = make_serving_signatures(model, tf_transform_output)
       model.save(fn_args.serving_model_dir, save_format='tf', signatures=signatures)
