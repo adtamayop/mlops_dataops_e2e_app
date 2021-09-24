@@ -6,11 +6,16 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
-        exclude: build/gdrive-user-credentials.json
+        exclude: |
+          (?x)(
+              build/gdrive-user-credentials.json
+              mlruns/
+          )
       - id: check-yaml
       - id:
           check-added-large-files
       -   id: pretty-format-json
+          exclude: mlruns/
       - id: requirements-txt-fixer
   - repo: https://github.com/pycqa/isort
     rev: 5.8.0
@@ -56,7 +61,7 @@ repos:
     hooks:
       - id: pytest-check
         name: pytest-check
-        entry: pytest
+        entry: pytest --ignore=/app/test/pipeline/test_tfx_e2e.py
         language: system
         pass_filenames: false
         always_run: true

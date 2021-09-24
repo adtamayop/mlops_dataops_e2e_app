@@ -4,13 +4,14 @@ This repository contains an application that integrates mlops and dataops method
 
 TODO list:
 
+- Pendientes test de integración de todo el pipeline volver a configurarlo
+- Feature store (Feast)
 - Model card
 - Poetry + toml
 - LOAD api_key of alphavetage from environment
 - Guardar los datos con fechas de creación
-- Pendientes test de integración de todo el pipeline volver a configurarlo
 - opcional ejecución con dataflow
-- Feature store (Feast)
+
 - Serving
 
 

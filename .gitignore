@@ -24,6 +24,7 @@ __pycache__/
 ./notebooks/pipeline_test/*
 ./tests/coverage_report
 ./tfx_pipeline_output/metadata
+/test/pipeline/testPipeline/*
 
 nohup.out
 htmlcov/

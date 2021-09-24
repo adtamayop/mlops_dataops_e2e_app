@@ -1,6 +1,8 @@
 # /test_pipeline/test_components/
-/test_pipeline/testPipeline/pipelines/*
+/testPipeline/metadata/*
+/testPipeline/pipelines/*
 /test_pipeline/testPipeline/metadata/*
+/test_pipeline/testPipeline/serving_model/*
 !/test_pipeline/testPipeline/metadata/.gitkeep
 !/test_pipeline/testPipeline/pipelines/.gitkeep
 /coverage_report/*
