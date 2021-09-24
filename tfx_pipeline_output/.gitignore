@@ -1,4 +1,4 @@
 /mlops-dataops-pipeline
-/metadata
-/pipelines
-/serving_model
+/metadata/*
+/pipelines/*
+/serving_model/*

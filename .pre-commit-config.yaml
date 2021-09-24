@@ -14,8 +14,13 @@ repos:
       - id: check-yaml
       - id:
           check-added-large-files
-      -   id: pretty-format-json
-          exclude: mlruns/
+      # -   id: pretty-format-json
+      #     exclude: |
+      #       (?x)(
+      #           build/gdrive-user-credentials.json
+      #           mlruns/
+      #           test/pipeline/
+      #       )
       - id: requirements-txt-fixer
   - repo: https://github.com/pycqa/isort
     rev: 5.8.0

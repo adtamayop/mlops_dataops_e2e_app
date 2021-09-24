@@ -1,0 +1,48 @@
+{
+  "evalConfig": {
+    "modelSpecs": [
+      {
+        "signatureName": "serving_default",
+        "labelKey": "labels_xf",
+        "preprocessingFunctionNames": [
+          "transform_features"
+        ]
+      }
+    ],
+    "slicingSpecs": [
+      {}
+    ],
+    "metricsSpecs": [
+      {
+        "metrics": [
+          {
+            "className": "ExampleCount"
+          },
+          {
+            "className": "MultiClassConfusionMatrixPlot"
+          },
+          {
+            "className": "F1Score"
+          },
+          {
+            "className": "SparseCategoricalAccuracy",
+            "threshold": {
+              "valueThreshold": {
+                "lowerBound": 0.1
+              }
+            }
+          }
+        ],
+        "modelNames": [
+          ""
+        ]
+      }
+    ]
+  },
+  "version": "0.31.0",
+  "dataLocation": "<user provided PCollection>",
+  "fileFormat": "<unknown>",
+  "modelLocations": {
+    "": "test/pipeline/testPipeline/pipelines/local_pipeline/Trainer/model/8/Format-Serving"
+  }
+}

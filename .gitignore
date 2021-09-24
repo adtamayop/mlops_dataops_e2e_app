@@ -23,8 +23,14 @@ __pycache__/
 
 ./notebooks/pipeline_test/*
 ./tests/coverage_report
-./tfx_pipeline_output/metadata
-/test/pipeline/testPipeline/*
+/tfx_pipeline_output/metadata/*
+/tfx_pipeline_output/metadata/*
+
+/test/pipeline/testPipeline/pipelines/local_pipeline/*
+./test/pipeline/testPipeline/pipelines/local_pipeline/*
+
+/test/pipeline/testPipeline/metadata/local_pipeline/*
+./test/pipeline/testPipeline/metadata/local_pipeline/*
 
 nohup.out
 htmlcov/
