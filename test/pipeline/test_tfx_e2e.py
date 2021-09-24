@@ -25,7 +25,7 @@ from pipeline_final.pipeline_config import (_data_root, _metadata_path,
                                             _pipeline_root,
                                             _preprocessing_file, _root,
                                             _serving_model_dir)
-from src.config.config import Features
+from src.config.config import Features, Paths
 from src.preprocessing.preprocessing import transformed_name
 
 # import pipeline_local  # NOQA: E402 (tengo que importarlo así)
@@ -41,7 +41,7 @@ class PipelineEndToEndTest(tf.test.TestCase, parameterized.TestCase):
         super(PipelineEndToEndTest, self).setUp()
         self._test_dir = os.path.join(TEST_PIPELINE_PATH)
         self._pipeline_name = _pipeline_name
-        self._data_root = _data_root
+        self._data_root = Paths.TEST_DATA_PATH
         self._module_file = _module_file
         self._preprocessing_file = _preprocessing_file
         self._serving_model_dir = _serving_model_dir
