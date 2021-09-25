@@ -50,8 +50,18 @@ class PipelineEndToEndTest(tf.test.TestCase, parameterized.TestCase):
             self._test_dir,"metadata", self._pipeline_name, "metadata.db"
         )
 
-        self.clean_directory(os.path.join(self._test_dir,"pipelines"))
-        self.clean_directory(os.path.join(self._test_dir,"metadata"))
+        if not os.path.exists(os.path.join(self._test_dir,"pipelines")):
+            os.makedirs(os.path.join(self._test_dir,"pipelines"))
+        else:
+            self.clean_directory(os.path.join(self._test_dir,"pipelines"))
+
+        if not os.path.exists(os.path.join(self._test_dir,"metadata")):
+            os.makedirs(os.path.join(self._test_dir,"metadata"))
+        else:
+            self.clean_directory(os.path.join(self._test_dir,"metadata"))
+
+
+
 
     def clean_directory(self, path_to_clean):
         list_dir = os.listdir(path_to_clean)
