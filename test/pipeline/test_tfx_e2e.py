@@ -111,11 +111,11 @@ class PipelineEndToEndTest(tf.test.TestCase, parameterized.TestCase):
     def testPipeline(self):
         tfx.orchestration.LocalDagRunner().run(
             _create_pipeline(
-                pipeline_name=_pipeline_name,
+                pipeline_name=self._pipeline_name,
                 pipeline_root=self._pipeline_root,
-                data_root=_data_root,
-                module_file=_module_file,
-                preprocess_file = _preprocessing_file,
+                data_root=self._data_root,
+                module_file=self._module_file,
+                preprocess_file = self._preprocessing_file,
                 accuracy_threshold=0.1,
                 serving_model_dir=self._serving_model_dir,
                 metadata_path=self._metadata_path,

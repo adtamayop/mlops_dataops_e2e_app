@@ -17,7 +17,7 @@ from src.preprocessing.preprocessing import transformed_name
 
 _penguin_root = os.path.join(".")
 
-_data_root = os.path.join(_penguin_root, 'data/train_data/WMT/train/')
+# _data_root = os.path.join(_penguin_root, 'data/train_data/WMT/train/')
 
 _tfx_root = os.path.join(_penguin_root, 'tfx_pipeline_output')
 
