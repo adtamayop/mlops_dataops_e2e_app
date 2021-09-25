@@ -76,7 +76,7 @@ class Features:
         _df_train = pd.read_csv(
             os.path.join(
                 Paths.ROOT_DATA_PATH,
-                "test_dataset",
+                "test_data",
                 "train",
                 "train.csv"
             )
